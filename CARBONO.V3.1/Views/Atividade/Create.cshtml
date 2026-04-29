@@ -1,0 +1,18 @@
+@model CARBONO.V3._1.Models.RegistroCarbono
+
+<div class="container">
+    <h2>Novo Cálculo</h2>
+    <form asp-action="Create">
+        <div class="form-group">
+            <label>Tipo de Atividade</label>
+            <select asp-for="IdAtividade" class="form-control" 
+                    asp-items="@(new SelectList(ViewBag.ListaAtividades, "Id", "Nome"))">
+            </select>
+        </div>
+        <div class="form-group mt-3">
+            <label>Quantidade (km ou kWh)</label>
+            <input asp-for="Quantidade" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Calcular e Salvar</button>
+    </form>
+</div>

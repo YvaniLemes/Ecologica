@@ -1,0 +1,48 @@
+@{
+    Layout = null; // Remove o menu padrão para ficar igual ao seu modelo
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CARBONO</title>
+    <link rel="stylesheet" href="~/css/style.css">
+    <style>
+        /* Estilo rápido para garantir que fique bonito mesmo se o CSS não carregar */
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 2rem; border-radius: 8px; shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 400px; }
+        h1 { color: #2e7d32; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #1b5e20; }
+        .msg-erro { background-color: #ffcdd2; color: #d32f2f; border: 1px solid #ef9a9a; padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+        .link-container { margin-top: 20px; font-size: 14px; }
+        .btn-link-form { color: #2e7d32; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌿 CARBONO</h1>
+
+        @if (ViewBag.Erro != null)
+        {
+            <div class="msg-erro">
+                @ViewBag.Erro
+            </div>
+        }
+
+        <form class="form" asp-controller="Usuario" asp-action="Login" method="POST">
+            <input type="email" name="email" placeholder="E-mail" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+
+        <div class="link-container">
+            <p>Não tem uma conta?</p>
+            <a asp-action="Cadastro" class="btn-link-form">Cadastre-se agora</a>
+        </div>
+    </div>
+</body>
+</html>

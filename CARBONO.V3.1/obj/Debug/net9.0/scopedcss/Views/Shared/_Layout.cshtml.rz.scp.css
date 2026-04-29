@@ -1,0 +1,63 @@
+/* Estilo Identidade Ecologica */
+
+a.navbar-brand[b-cn8qlc3b43] {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+  font-weight: bold;
+  color: #1b4d2c !important; /* Nome Ecologica sempre em verde escuro */
+}
+
+a[b-cn8qlc3b43] {
+  color: #28a745; /* Links em verde */
+}
+
+a:hover[b-cn8qlc3b43] {
+  color: #1b4d2c;
+}
+
+/* Botões Principais */
+.btn-primary[b-cn8qlc3b43] {
+  color: #fff;
+  background-color: #28a745;
+  border-color: #1e7e34;
+}
+
+.btn-primary:hover[b-cn8qlc3b43] {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+/* Menu de Navegação Ativo */
+.nav-pills .nav-link.active[b-cn8qlc3b43], .nav-pills .show > .nav-link[b-cn8qlc3b43] {
+  color: #fff;
+  background-color: #1b4d2c;
+  border-color: #153a21;
+}
+
+.border-top[b-cn8qlc3b43] {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom[b-cn8qlc3b43] {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow[b-cn8qlc3b43] {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy[b-cn8qlc3b43] {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Rodapé Ajustado */
+.footer[b-cn8qlc3b43] {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+  background-color: #f8f9fa;
+  color: #556b5c;
+}
