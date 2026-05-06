@@ -1,0 +1,74 @@
+@model Ecologica.Models.RegistroCarbonoModel
+
+<div class="container">
+    <h2>Novo Cálculo</h2>
+    <form asp-action="Create">
+        <div class="form-group">
+            <label>Tipo de Atividade</label>
+            <select asp-for="IdAtividade" class="form-control" 
+                    asp-items="@(new SelectList(ViewBag.ListaAtividades, "Id", "Nome"))">
+            </select>
+        </div>
+        <div class="form-group mt-3">
+            <label>Quantidade (km, kWh ou kg)</label>
+            <input asp-for="Quantidade" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Calcular e Salvar</button>
+    </form>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Guia de Preenchimento: Como medir seu consumo?</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Atividade</th>
+                                <th>O que informar</th>
+                                <th>Onde encontrar o dado?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Energia Elétrica</strong></td>
+                                <td>kWh</td>
+                                <td>Consulte o "Consumo do Mês" na sua conta de luz (ex: Enel).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Viagem de Carro/Moto</strong></td>
+                                <td>km</td>
+                                <td>Distância percorrida (Odômetro ou Google Maps).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Consumo de Gás (GLP)</strong></td>
+                                <td>kg ou m³</td>
+                                <td>Peso do botijão ou consumo medido na conta do condomínio.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Viagem de Avião</strong></td>
+                                <td>km</td>
+                                <td>Distância total do voo (você pode consultar em sites como Air Miles Calculator).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Alimentação (Carnes/Vegetais)</strong></td>
+                                <td>kg</td>
+                                <td>Peso aproximado da porção consumida (ex: 0.2 para 200g).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lixo Doméstico</strong></td>
+                                <td>kg ou Litros</td>
+                                <td>Capacidade do saco de lixo preenchido (ex: saco de 50L).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="text-muted small">
+                        * O <strong>Ecologica</strong> processa esses valores com base em fatores de emissão oficiais para gerar seu histórico em kgCO2.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

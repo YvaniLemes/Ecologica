@@ -1,0 +1,169 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Página Inicial";
+    var nomeUsuario = HttpContextAccessor.HttpContext?.Session?.GetString("NomeUsuario");
+}
+
+<style>
+    /* Estilo Global */
+    body {
+        background-color: #f4f7f5;
+        overflow-x: hidden;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Card Central Elevado */
+    .hero-card {
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+        padding: 5rem 2rem;
+        position: relative;
+        overflow: hidden;
+        border: none;
+        margin-top: 2rem;
+        z-index: 1;
+    }
+
+    /* Decoração de Fundo (Trevos) */
+    .clover-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.15;
+    }
+
+    .clover {
+        position: absolute;
+        font-size: 2.5rem;
+    }
+
+    /* Tipografia Principal */
+    .display-main {
+        font-size: 4.5rem;
+        font-weight: 800;
+        color: #1b4d2c;
+        position: relative;
+        z-index: 2;
+        margin-bottom: 0.5rem;
+        letter-spacing: -1px;
+    }
+
+    .subtitle-main {
+        color: #556b5c;
+        font-size: 1.3rem;
+        position: relative;
+        z-index: 2;
+        font-weight: 400;
+        margin-bottom: 2rem;
+    }
+
+    .custom-hr {
+        width: 80px;
+        height: 4px;
+        background-color: #28a745;
+        margin: 1.5rem auto;
+        border: none;
+        border-radius: 10px;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* OS BOTÕES QUE VOCÊ QUERIA AJUSTAR */
+    .btn-custom {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 28px;
+        background-color: #1b4d2c;
+        /* Verde escuro base */
+        color: white !important;
+        text-decoration: none !important;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        /* Transição suave para o efeito "acender" */
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        min-width: 180px;
+    }
+
+    /* Efeito de "Acender" ao passar o mouse (Hover) */
+    .btn-custom:hover {
+        background-color: #28a745;
+        /* Verde vibrante que "acende" */
+        transform: translateY(-3px);
+        /* Leve pulo para cima */
+        box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        color: white !important;
+    }
+
+    .btn-container {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 30px;
+        position: relative;
+        z-index: 3;
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="hero-card text-center">
+                
+                <div class="clover-background">
+                    <span class="clover" style="top: 10%; left: 8%; transform: rotate(15deg);">🍀</span>
+                    <span class="clover" style="top: 15%; left: 85%; transform: rotate(-20deg);">🍀</span>
+                    <span class="clover" style="top: 60%; left: 5%; transform: rotate(45deg);">🍀</span>
+                    <span class="clover" style="top: 75%; left: 88%; transform: rotate(-10deg);">🍀</span>
+                    <span class="clover" style="top: 45%; left: 92%; transform: rotate(-35deg);">🍀</span>
+                    <span class="clover" style="top: 8%; left: 50%; transform: rotate(10deg);">🍀</span>
+                </div>
+
+                <div class="main-content">
+                    <h1 class="display-main">ECOLOGICA</h1>
+                    <p class="subtitle-main">Gestão inteligente de emissões de carbono.</p>
+                    
+                    <div class="custom-hr"></div>
+
+                    @if (!string.IsNullOrEmpty(nomeUsuario))
+                    {
+                        <div class="mt-4">
+                            <h3 class="fw-light text-dark">
+                                Olá, <span class="text-success fw-bold">@nomeUsuario</span>!
+                            </h3>
+                            <p class="text-muted">Seu painel está pronto. O que vamos calcular hoje?</p>
+
+                            <div class="btn-container">
+                                <a href="@Url.Action("Create", "Atividade")" class="btn-custom">
+                                    Novo Cálculo
+                                </a>
+                                <a href="@Url.Action("Index", "Atividade")" class="btn-custom">
+                                    Meu Histórico
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mt-5">
+                            <a asp-controller="Usuario" asp-action="Login"
+                                   class="btn btn-success btn-lg px-5 py-3 shadow fw-bold" style="border-radius: 12px;">
+                                COMEÇAR AGORA <i class="bi bi-arrow-right ms-2"></i>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
