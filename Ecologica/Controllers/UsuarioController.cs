@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Ecologica.Models.Data; // Para encontrar a pasta Data
-using Ecologica.Models;      // Para encontrar os modelos
+using Ecologica.Models.Data; 
+using Ecologica.Models;      
 
 namespace Ecologica.Controllers
 {
@@ -22,13 +22,26 @@ namespace Ecologica.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string senha)
         {
+            // --- ACESSO DE TESTE / EMERGÊNCIA (Para a Equipe e Apresentação) ---
+            // Permite logar sem depender do banco de dados local de cada um
+            if (senha == "admin123" && (email == "marcelo@ecologica.com" || email == "elton@ecologica.com" || email == "yvani@ecologica.com"))
+            {
+                string nomeLimpo = email.Split('@')[0];
+                string nomeFormatado = char.ToUpper(nomeLimpo[0]) + nomeLimpo.Substring(1);
+                
+                HttpContext.Session.SetString("UsuarioNome", nomeFormatado);
+                HttpContext.Session.SetInt32("UsuarioId", 999); // ID fictício para teste
+                
+                return RedirectToAction("Index", "Atividade");
+            }
+
+            // --- LOGIN VIA BANCO DE DATA (SQLITE) ---
             var usuarioEncontrado = await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
 
             if (usuarioEncontrado != null)
             {
-                // CORREÇÃO AQUI: Alterado de "NomeUsuario" para "UsuarioNome" 
-                // para bater com o que o AtividadeController espera.
+                // UsuarioNome deve bater com o que o AtividadeController busca
                 HttpContext.Session.SetString("UsuarioNome", usuarioEncontrado.Nome ?? "");
                 HttpContext.Session.SetInt32("UsuarioId", usuarioEncontrado.Id);
                 
