@@ -1,75 +1,127 @@
 @model IEnumerable<Ecologica.Models.RegistroCarbonoModel>
 
 @{
-    ViewData["Title"] = "Ecologica - Dashboard";
-    // Ajuste de segurança no Cast para garantir que o Namespace bata com o novo projeto
+    ViewData["Title"] = "Ecologica - Dashboard 🍀";
     var perguntas = ViewBag.PerguntasQuiz as List<Ecologica.Models.QuizViewModel>;
 }
+
+<style>
+    /* CSS Personalizado para o Estilo Botânico da Yvani */
+    :root {
+        --verde-suave: #e8f5e9;
+        --verde-claro: #c8e6c9;
+        --verde-primario: #2e7d32;
+        --sage: #81c784;
+    }
+
+    body { background-color: #f1f8e9; } /* Fundo da página levemente esverdeado */
+
+    .card-botanico {
+        border-radius: 20px;
+        border: none;
+        transition: transform 0.3s;
+    }
+
+    .card-botanico:hover { transform: translateY(-5px); }
+
+    /* Estilo do Novo Quiz */
+    .quiz-container-sage {
+        background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%);
+        color: #1b5e20;
+        border-radius: 20px;
+    }
+
+    .btn-quiz {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid transparent;
+        color: #2e7d32;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-quiz:hover {
+        background: #2e7d32;
+        color: white;
+        border-color: #c8e6c9;
+    }
+
+    .badge-conquista {
+        background-color: var(--verde-primario) !important;
+        box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+    }
+</style>
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold text-success">Olá, @ViewBag.NomeUsuario!</h2>
-            <p class="text-muted">Acompanhe seu impacto ambiental e aprenda como reduzi-lo.</p>
+            <h2 class="fw-bold text-success">Olá, @ViewBag.NomeUsuario! 🍀</h2>
+            <p class="text-muted">Seu progresso está crescendo como uma planta bem cuidada.</p>
         </div>
-        <a asp-action="Create" class="btn btn-success btn-lg shadow-sm">
+        <a asp-action="Create" class="btn btn-success btn-lg shadow-sm" style="border-radius: 30px;">
             <i class="bi bi-plus-circle"></i> Nova Atividade
         </a>
     </div>
 
     <div class="row">
         <div class="col-lg-5">
-            <div class="card shadow-sm mb-4 border-0">
+            <div class="card card-botanico shadow-sm mb-4">
                 <div class="card-header bg-white border-0 pt-3">
-                    <h5 class="card-title fw-bold"><i class="bi bi-trophy-fill text-warning"></i> Suas Conquistas</h5>
+                    <h5 class="card-title fw-bold text-success">
+                        <i class="bi bi-stars text-warning"></i> Suas Conquistas 🍀
+                    </h5>
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-3">
-                        @if (ViewBag.Conquistas != null)
+                        @if (ViewBag.Conquistas != null && ((List<Ecologica.Models.Conquista>)ViewBag.Conquistas).Any())
                         {
                             @foreach (var conquista in (List<Ecologica.Models.Conquista>)ViewBag.Conquistas)
                             {
                                 <div class="text-center" style="width: 100px;">
-                                    <div class="badge rounded-circle bg-success p-3 mb-2 shadow-sm" title="@conquista.Descricao">
-                                        <i class="bi bi-patch-check-fill" style="font-size: 1.5rem;"></i>
+                                    <div class="badge rounded-circle badge-conquista p-3 mb-2" title="@conquista.Descricao">
+                                        <i class="bi bi-tree-fill" style="font-size: 1.5rem; color: white;"></i>
                                     </div>
-                                    <p class="small fw-bold mb-0">@conquista.Nome</p>
+                                    <p class="small fw-bold mb-0 text-success">@conquista.Nome</p>
                                 </div>
                             }
                         }
                         else
                         {
-                            <p class="text-muted small">Complete atividades para ganhar medalhas!</p>
+                            <p class="text-muted small">Plante boas ações e veja suas medalhas brotarem!</p>
                         }
                     </div>
                 </div>
             </div>
 
-            <div class="card shadow-sm border-0 mb-4 text-center">
+            <div class="card card-botanico shadow-sm border-0 mb-4 text-center">
                 <div class="card-body">
-                    <h5 class="card-title fw-bold mb-3">Impacto por Categoria</h5>
+                    <h5 class="card-title fw-bold text-success mb-3">🌿 Impacto por Categoria</h5>
                     <canvas id="meuGrafico" style="max-height: 280px;"></canvas>
                 </div>
             </div>
         </div>
 
         <div class="col-lg-7">
-            <div class="card shadow-sm border-0 mb-4 bg-dark text-white">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold"><i class="bi bi-controller text-info"></i> Desafio do Dia</h5>
-                    <div id="quiz-container">
+            <div class="card card-botanico shadow-sm border-0 mb-4 quiz-container-sage">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="fw-bold"><i class="bi bi-lightning-charge-fill text-warning"></i> Desafio do Dia 🍀</h5>
+                        <span class="badge bg-white text-success rounded-pill px-3 py-2">ECO-GAME</span>
+                    </div>
+                    
+                    <div id="quiz-container" class="mt-3">
                         @if (perguntas != null && perguntas.Count > 0)
                         {
                             @for (int i = 0; i < perguntas.Count; i++)
                             {
                                 <div class="pergunta-card" id="pergunta-@i" style="@(i == 0 ? "" : "display:none")">
-                                    <p class="mb-3">@perguntas[i].Pergunta</p>
-                                    <div class="d-grid gap-2">
+                                    <h5 class="mb-4 fw-normal">@perguntas[i].Pergunta</h5>
+                                    <div class="d-grid gap-3">
                                         @for (int j = 0; j < perguntas[i].Opcoes.Count; j++)
                                         {
-                                            <button class="btn btn-outline-light btn-sm text-start" 
+                                            <button class="btn btn-quiz text-start p-3 shadow-sm" 
                                                     onclick="verificarResposta(@i, @j, @perguntas[i].RespostaCorretaIndice, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(perguntas[i].Explicacao))')">
-                                                @perguntas[i].Opcoes[j]
+                                                <i class="bi bi-check2-circle me-2"></i> @perguntas[i].Opcoes[j]
                                             </button>
                                         }
                                     </div>
@@ -78,14 +130,17 @@
                         }
                         else
                         {
-                            <p class="text-info small">O quiz está sendo preparado. Volte em breve!</p>
+                            <p class="text-white small">O quiz está sendo preparado. Volte em breve!</p>
                         }
                     </div>
-                    <div id="resultado-quiz" class="mt-3 p-2 rounded small" style="display:none"></div>
+                    <div id="resultado-quiz" class="mt-4 p-3 rounded-4 shadow-sm fw-bold" style="display:none"></div>
                 </div>
             </div>
 
-            <div class="card shadow-sm border-0">
+            <div class="card card-botanico shadow-sm border-0">
+                <div class="card-header bg-white border-0 pt-3">
+                    <h5 class="card-title fw-bold text-success">📜 Histórico de Atividades</h5>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
@@ -101,16 +156,18 @@
                                 @foreach (var registro in Model)
                                 {
                                     <tr>
-                                        <td class="fw-bold text-success">@registro.AtividadeRelacionada?.Nome</td>
-                                        <td>@registro.EmissaoTotal.ToString("N2")</td>
-                                        <td>@registro.DataRegistro.ToShortDateString()</td>
+                                        <td class="fw-bold text-success">
+                                            <i class="bi bi-flower1 me-1"></i> @registro.AtividadeRelacionada?.Nome
+                                        </td>
+                                        <td class="fw-bold">@registro.EmissaoTotal.ToString("N2")</td>
+                                        <td class="text-muted">@registro.DataRegistro.ToShortDateString()</td>
                                     </tr>
                                 }
                             }
                             else
                             {
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted py-3">Nenhum registro encontrado.</td>
+                                    <td colspan="3" class="text-center text-muted py-3">Nada por aqui ainda... Vamos registrar algo?</td>
                                 </tr>
                             }
                         </tbody>
@@ -124,7 +181,7 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // GRÁFICO
+        // GRÁFICO (Cores atualizadas para combinar com as plantas)
         const ctx = document.getElementById('meuGrafico');
         if (ctx) {
             new Chart(ctx, {
@@ -133,19 +190,22 @@
                     labels: @Html.Raw(Json.Serialize(ViewBag.LabelsGrafico) ?? "[]"),
                     datasets: [{
                         data: @Html.Raw(Json.Serialize(ViewBag.ValoresGrafico) ?? "[]"),
-                        backgroundColor: ['#198754', '#0d6efd', '#ffc107', '#dc3545'],
-                        borderWidth: 0
+                        backgroundColor: ['#2e7d32', '#66bb6a', '#a5d6a7', '#1b5e20'],
+                        hoverOffset: 10,
+                        borderWidth: 5,
+                        borderColor: '#ffffff'
                     }]
                 },
                 options: {
                     plugins: {
-                        legend: { position: 'bottom' }
-                    }
+                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+                    },
+                    cutout: '70%'
                 }
             });
         }
 
-        // LÓGICA DO QUIZ
+        // LÓGICA DO QUIZ (Com transição suave)
         let processando = false;
         function verificarResposta(pIdx, escolhida, correta, explicacao) {
             if (processando) return;
@@ -155,27 +215,35 @@
             resDiv.style.display = "block";
             
             if (escolhida === correta) {
-                resDiv.className = "mt-3 p-2 rounded small bg-success text-white";
-                resDiv.innerHTML = "<strong>✅ Correto!</strong> " + explicacao;
+                resDiv.style.backgroundColor = "#c8e6c9";
+                resDiv.style.color = "#1b5e20";
+                resDiv.innerHTML = "🍀 <strong>Perfeito!</strong> " + explicacao;
             } else {
-                resDiv.className = "mt-3 p-2 rounded small bg-danger text-white";
-                resDiv.innerHTML = "<strong>❌ Errou!</strong> " + explicacao;
+                resDiv.style.backgroundColor = "#ffecb3";
+                resDiv.style.color = "#5d4037";
+                resDiv.innerHTML = "🌿 <strong>Quase lá!</strong> " + explicacao;
             }
 
             setTimeout(() => {
                 const cardAtual = document.getElementById(`pergunta-${pIdx}`);
-                if (cardAtual) cardAtual.style.display = "none";
-                
-                let proxima = document.getElementById(`pergunta-${pIdx + 1}`);
-                if (proxima) {
-                    proxima.style.display = "block";
-                    resDiv.style.display = "none";
-                } else {
-                    resDiv.className = "mt-3 p-2 rounded small bg-info text-white";
-                    resDiv.innerHTML = "🏁 Parabéns! Você concluiu o desafio.";
+                if (cardAtual) {
+                    cardAtual.style.opacity = "0";
+                    setTimeout(() => {
+                        cardAtual.style.display = "none";
+                        let proxima = document.getElementById(`pergunta-${pIdx + 1}`);
+                        if (proxima) {
+                            proxima.style.display = "block";
+                            proxima.style.opacity = "1";
+                            resDiv.style.display = "none";
+                        } else {
+                            resDiv.style.backgroundColor = "#ffffff";
+                            resDiv.style.color = "#2e7d32";
+                            resDiv.innerHTML = "🏁 <strong>Você é fera!</strong> Desafio concluído com sucesso. 🍀";
+                        }
+                        processando = false;
+                    }, 500);
                 }
-                processando = false;
-            }, 3000); // Reduzi para 3 segundos para a transição ser mais fluida
+            }, 3500);
         }
     </script>
 }

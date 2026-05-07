@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Ecologica.Models.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Ecologica.Controllers
 {
@@ -29,20 +30,68 @@ namespace Ecologica.Controllers
 
             ViewBag.NomeUsuario = nomeLogado;
 
-            // --- INÍCIO DA LÓGICA DO QUIZ ---
+            // --- INÍCIO DA LÓGICA DO QUIZ AMPLIADO (10 QUESTÕES) ---
             var perguntas = new List<QuizViewModel>
             {
                 new QuizViewModel {
                     Pergunta = "Qual transporte emite menos CO2 por km/passageiro?",
                     Opcoes = new List<string> { "Carro Individual", "Ônibus Elétrico", "Bicicleta" },
                     RespostaCorretaIndice = 2,
-                    Explicacao = "A bicicleta tem emissão zero de gases poluentes durante o trajeto!"
+                    Explicacao = "A bicicleta tem emissão zero de gases poluentes durante o trajeto! 🍀"
                 },
                 new QuizViewModel {
                     Pergunta = "O que é 'Energia Limpa'?",
                     Opcoes = new List<string> { "Energia de carvão", "Energia Solar/Eólica", "Energia de pilhas comuns" },
                     RespostaCorretaIndice = 1,
                     Explicacao = "Fontes renováveis não emitem CO2 durante a geração."
+                },
+                new QuizViewModel {
+                    Pergunta = "Quanto tempo uma garrafa PET leva para se decompor?",
+                    Opcoes = new List<string> { "Até 100 anos", "Até 450 anos", "Cerca de 20 anos" },
+                    RespostaCorretaIndice = 1,
+                    Explicacao = "Plásticos podem levar séculos. Reduzir o uso é fundamental! ♻️"
+                },
+                new QuizViewModel {
+                    Pergunta = "Qual dessas carnes tem a maior pegada de carbono?",
+                    Opcoes = new List<string> { "Frango", "Suína", "Bovina" },
+                    RespostaCorretaIndice = 2,
+                    Explicacao = "A produção de carne bovina exige muito mais recursos e emite mais metano."
+                },
+                new QuizViewModel {
+                    Pergunta = "O que significa o termo 'Carbono Neutro'?",
+                    Opcoes = new List<string> { "Não respirar", "Equilibrar emissões com absorção", "Usar apenas pilhas" },
+                    RespostaCorretaIndice = 1,
+                    Explicacao = "É quando compensamos o que emitimos através de ações como o plantio de árvores. 🌳"
+                },
+                new QuizViewModel {
+                    Pergunta = "Qual o maior benefício da compostagem doméstica?",
+                    Opcoes = new List<string> { "Gerar adubo e reduzir lixo", "Atrair insetos", "Aumentar o consumo" },
+                    RespostaCorretaIndice = 0,
+                    Explicacao = "A compostagem transforma lixo orgânico em nutriente para a terra! 🍀"
+                },
+                new QuizViewModel {
+                    Pergunta = "Qual dessas lâmpadas é a mais eficiente?",
+                    Opcoes = new List<string> { "Incandescente", "Fluorescente", "LED" },
+                    RespostaCorretaIndice = 2,
+                    Explicacao = "Lâmpadas LED consomem até 80% menos energia que as comuns."
+                },
+                new QuizViewModel {
+                    Pergunta = "O que é o 'Efeito Estufa'?",
+                    Opcoes = new List<string> { "Um tipo de horta", "Aquecimento global por gases", "Resfriamento da Terra" },
+                    RespostaCorretaIndice = 1,
+                    Explicacao = "É o acúmulo de gases que retêm calor na atmosfera."
+                },
+                new QuizViewModel {
+                    Pergunta = "Qual país é líder mundial em energia eólica?",
+                    Opcoes = new List<string> { "Brasil", "China", "Estados Unidos" },
+                    RespostaCorretaIndice = 1,
+                    Explicacao = "A China investe massivamente em infraestrutura de energias renováveis."
+                },
+                new QuizViewModel {
+                    Pergunta = "Qual a melhor forma de descartar eletrônicos?",
+                    Opcoes = new List<string> { "Lixo comum", "Pontos de coleta específica", "Queimar no quintal" },
+                    RespostaCorretaIndice = 1,
+                    Explicacao = "Eletrônicos possuem metais pesados e devem ser reciclados em locais próprios. 🍀"
                 }
             };
             ViewBag.PerguntasQuiz = perguntas;

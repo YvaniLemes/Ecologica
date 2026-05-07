@@ -4,26 +4,35 @@ using Ecologica.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuração do Banco de Dados SQLite
+// 1. Configuração do Banco de Dados SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=database.db"));
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddSession();
+
+// 2. Configuração ESSENCIAL para a Session funcionar
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// --- INÍCIO DA POPULAÇÃO DO BANCO (SEED DATA) ---
+// 3. --- BLOCO ÚNICO DE POPULAÇÃO DO BANCO (SEED DATA) ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
 
-    // Garante a criação do banco database.db
+    // Garante a criação do banco
     context.Database.EnsureCreated();
 
-    // Popula apenas se a tabela estiver vazia
+    // Popula as atividades principais se estiver vazio
     if (!context.Atividades.Any())
     {
         context.Atividades.AddRange(
@@ -37,9 +46,21 @@ using (var scope = app.Services.CreateScope())
         );
         context.SaveChanges();
     }
-}
-// --- FIM DA POPULAÇÃO DO BANCO ---
 
+    // Verifica especificamente a atividade de lixo para não duplicar
+    if (!context.Atividades.Any(a => a.Nome.Contains("Lixo")))
+    {
+        context.Atividades.Add(new Atividade 
+        { 
+            Nome = "Lixo Doméstico (Orgânico)", 
+            FatorEmissao = 0.5, 
+            UnidadeMedida = "kg" 
+        });
+        context.SaveChanges();
+    }
+}
+
+// 4. Configurações de Middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -49,29 +70,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseSession();
+
+// O UseSession DEVE vir depois do UseRouting e antes do UseAuthorization
+app.UseSession(); 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-    using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<Ecologica.Models.Data.ApplicationDbContext>();
-
-    // Verifica se a atividade de lixo já existe para não duplicar
-    if (!context.Atividades.Any(a => a.Nome.Contains("Lixo")))
-    {
-        context.Atividades.Add(new Ecologica.Models.Atividade 
-        { 
-            Nome = "Lixo Doméstico (Orgânico)", 
-            FatorEmissao = 0.5, 
-            UnidadeMedida = "kg" 
-        });
-        context.SaveChanges();
-    }
-}
 
 app.Run();
