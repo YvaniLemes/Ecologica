@@ -1,12 +1,20 @@
-using Microsoft.AspNetCore.Mvc; 
-using Ecologica.Models.Data; // Para encontrar a pasta Data
-using Ecologica.Models;      // Para encontrar os modelos     
+using Microsoft.AspNetCore.Mvc;
+using Ecologica.Models.Data;
+using Ecologica.Models;
 using System.Collections.Generic;
 
 namespace Ecologica.Controllers
 {
     public class QuizController : Controller
     {
+        // Se no futuro você quiser salvar a pontuação, o Context já está aqui
+        private readonly ApplicationDbContext _context;
+
+        public QuizController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
             var perguntas = new List<QuizViewModel>
@@ -25,7 +33,10 @@ namespace Ecologica.Controllers
                 }
             };
 
-            return View(perguntas);
+            // Usando a ViewBag exatamente como você tem na View
+            ViewBag.PerguntasQuiz = perguntas;
+
+            return View();
         }
     }
 }

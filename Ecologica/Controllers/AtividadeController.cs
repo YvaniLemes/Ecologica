@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Ecologica.Models;
 using Microsoft.AspNetCore.Http;
 using Ecologica.Models.Data;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Ecologica.Controllers
 {
@@ -27,8 +29,26 @@ namespace Ecologica.Controllers
 
             ViewBag.NomeUsuario = nomeLogado;
 
+            // --- INÍCIO DA LÓGICA DO QUIZ ---
+            var perguntas = new List<QuizViewModel>
+            {
+                new QuizViewModel {
+                    Pergunta = "Qual transporte emite menos CO2 por km/passageiro?",
+                    Opcoes = new List<string> { "Carro Individual", "Ônibus Elétrico", "Bicicleta" },
+                    RespostaCorretaIndice = 2,
+                    Explicacao = "A bicicleta tem emissão zero de gases poluentes durante o trajeto!"
+                },
+                new QuizViewModel {
+                    Pergunta = "O que é 'Energia Limpa'?",
+                    Opcoes = new List<string> { "Energia de carvão", "Energia Solar/Eólica", "Energia de pilhas comuns" },
+                    RespostaCorretaIndice = 1,
+                    Explicacao = "Fontes renováveis não emitem CO2 durante a geração."
+                }
+            };
+            ViewBag.PerguntasQuiz = perguntas;
+            // --- FIM DA LÓGICA DO QUIZ ---
 
-            // 1. DADOS PARA O GRÁFICO (Versão otimizada para o Banco de Dados)
+            // 1. DADOS PARA O GRÁFICO
             var dadosGrafico = _context.RegistrosCarbono
                 .Where(r => r.IdUsuario == usuarioId)
                 .Select(r => new
@@ -43,7 +63,6 @@ namespace Ecologica.Controllers
                     Total = g.Sum(x => x.Emissao)
                 })
                 .ToList();
-
 
             ViewBag.LabelsGrafico = dadosGrafico.Select(d => d.Nome).ToArray();
             ViewBag.ValoresGrafico = dadosGrafico.Select(d => d.Total).ToArray();
@@ -76,11 +95,9 @@ namespace Ecologica.Controllers
             if (tipoAtividade != null && usuarioId != null)
             {
                 novoRegistro.IdUsuario = usuarioId.Value;
-                // CORREÇÃO: Cálculo com double para suportar fatores de emissão precisos
                 novoRegistro.EmissaoTotal = (double)(novoRegistro.Quantidade * tipoAtividade.FatorEmissao);
                 novoRegistro.DataRegistro = DateTime.Now;
 
-                // CORREÇÃO: Acessando o DbSet correto 'RegistrosCarbono'
                 _context.RegistrosCarbono.Add(novoRegistro);
                 _context.SaveChanges();
 
