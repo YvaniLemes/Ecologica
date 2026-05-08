@@ -33,6 +33,9 @@ namespace Ecologica.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("nome");
 
+                    b.Property<string>("UnidadeMedida")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("atividades");
@@ -48,7 +51,6 @@ namespace Ecologica.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Descricao")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
@@ -63,7 +65,7 @@ namespace Ecologica.Migrations
                     b.ToTable("Conquistas");
                 });
 
-            modelBuilder.Entity("Ecologica.Models.RegistroCarbono", b =>
+            modelBuilder.Entity("Ecologica.Models.RegistroCarbonoModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,7 +127,7 @@ namespace Ecologica.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("Ecologica.Models.RegistroCarbono", b =>
+            modelBuilder.Entity("Ecologica.Models.RegistroCarbonoModel", b =>
                 {
                     b.HasOne("Ecologica.Models.Atividade", "AtividadeRelacionada")
                         .WithMany()

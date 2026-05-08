@@ -1,5 +1,5 @@
 @{
-    Layout = null; // Remove o menu padrão para ficar igual ao seu modelo
+    Layout = null; 
 }
 
 <!DOCTYPE html>
@@ -7,24 +7,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - CARBONO</title>
+    <title>Login - Ecologica</title>
     <link rel="stylesheet" href="~/css/style.css">
     <style>
-        /* Estilo rápido para garantir que fique bonito mesmo se o CSS não carregar */
         body { font-family: Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: white; padding: 2rem; border-radius: 8px; shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 400px; }
-        h1 { color: #2e7d32; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #1b5e20; }
-        .msg-erro { background-color: #ffcdd2; color: #d32f2f; border: 1px solid #ef9a9a; padding: 10px; margin-bottom: 15px; border-radius: 4px; }
-        .link-container { margin-top: 20px; font-size: 14px; }
+        .container { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 400px; border-top: 5px solid #2e7d32; }
+        h1 { color: #2e7d32; margin-bottom: 1.5rem; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: #2e7d32; box-shadow: 0 0 5px rgba(46,125,50,0.2); }
+        button { width: 100%; padding: 12px; background-color: #2e7d32; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: #1b5e20; transform: translateY(-2px); }
+        .msg-erro { background-color: #ffcdd2; color: #d32f2f; border: 1px solid #ef9a9a; padding: 10px; margin-bottom: 15px; border-radius: 8px; font-size: 14px; }
+        .link-container { margin-top: 20px; font-size: 14px; color: #666; }
         .btn-link-form { color: #2e7d32; text-decoration: none; font-weight: bold; }
+        .btn-link-form:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🌿 CARBONO</h1>
+        <h1>🍀 Ecologica</h1>
 
         @if (ViewBag.Erro != null)
         {
@@ -33,15 +34,16 @@
             </div>
         }
 
-        <form class="form" asp-controller="Usuario" asp-action="Login" method="POST">
-            <input type="email" name="email" placeholder="E-mail" required>
-            <input type="password" name="senha" placeholder="Senha" required>
-            <button type="submit">Entrar</button>
+        @* Verifique se o asp-controller está exatamente igual ao nome da classe UsuarioController *@
+        <form asp-controller="Usuario" asp-action="Login" method="post">
+            <input type="email" name="email" placeholder="E-mail de acesso" required>
+            <input type="password" name="senha" placeholder="Sua senha" required>
+            <button type="submit">Acessar Sistema</button>
         </form>
 
         <div class="link-container">
-            <p>Não tem uma conta?</p>
-            <a asp-action="Cadastro" class="btn-link-form">Cadastre-se agora</a>
+            <p>Ainda não faz parte da equipe?</p>
+            <a asp-action="Cadastro" class="btn-link-form">Criar conta agora</a>
         </div>
     </div>
 </body>

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecologica.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260505131835_CriarTabelaConquistas")]
-    partial class CriarTabelaConquistas
+    [Migration("20260507182202_InicialEcologica")]
+    partial class InicialEcologica
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,9 @@ namespace Ecologica.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("nome");
 
+                    b.Property<string>("UnidadeMedida")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("atividades");
@@ -51,7 +54,6 @@ namespace Ecologica.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Descricao")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
@@ -66,7 +68,7 @@ namespace Ecologica.Migrations
                     b.ToTable("Conquistas");
                 });
 
-            modelBuilder.Entity("Ecologica.Models.RegistroCarbono", b =>
+            modelBuilder.Entity("Ecologica.Models.RegistroCarbonoModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +130,7 @@ namespace Ecologica.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("Ecologica.Models.RegistroCarbono", b =>
+            modelBuilder.Entity("Ecologica.Models.RegistroCarbonoModel", b =>
                 {
                     b.HasOne("Ecologica.Models.Atividade", "AtividadeRelacionada")
                         .WithMany()

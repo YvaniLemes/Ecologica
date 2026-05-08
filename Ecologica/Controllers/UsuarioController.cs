@@ -22,33 +22,27 @@ namespace Ecologica.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string senha)
         {
-            // --- ACESSO DE TESTE / EMERGÊNCIA (Para a Equipe e Apresentação) ---
-            // Permite logar sem depender do banco de dados local de cada um
+            // Acesso de teste para equipe
             if (senha == "admin123" && (email == "marcelo@ecologica.com" || email == "elton@ecologica.com" || email == "yvani@ecologica.com"))
             {
                 string nomeLimpo = email.Split('@')[0];
-                string nomeFormatado = char.ToUpper(nomeLimpo[0]) + nomeLimpo.Substring(1);
-                
-                HttpContext.Session.SetString("UsuarioNome", nomeFormatado);
-                HttpContext.Session.SetInt32("UsuarioId", 999); // ID fictício para teste
-                
+                HttpContext.Session.SetString("UsuarioNome", char.ToUpper(nomeLimpo[0]) + nomeLimpo.Substring(1));
+                HttpContext.Session.SetInt32("UsuarioId", 999);
                 return RedirectToAction("Index", "Atividade");
             }
 
-            // --- LOGIN VIA BANCO DE DATA (SQLITE) ---
             var usuarioEncontrado = await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
 
             if (usuarioEncontrado != null)
             {
-                // UsuarioNome deve bater com o que o AtividadeController busca
                 HttpContext.Session.SetString("UsuarioNome", usuarioEncontrado.Nome ?? "");
                 HttpContext.Session.SetInt32("UsuarioId", usuarioEncontrado.Id);
-                
                 return RedirectToAction("Index", "Atividade");
             }
 
-            ViewBag.Erro = "E-mail ou senha incorretos!";
+            // AVISO DE ERRO NO LOGIN
+            ViewBag.Erro = "E-mail ou senha incorretos! Verifique seus dados. 🍀";
             return View();
         }
 
@@ -57,23 +51,33 @@ namespace Ecologica.Controllers
         [HttpPost]
         public async Task<IActionResult> Cadastro(Usuario novoUsuario)
         {
-            if (ModelState.IsValid)
+            // Validação manual para garantir que o usuário preencheu o básico
+            if (string.IsNullOrEmpty(novoUsuario.Nome) || string.IsNullOrEmpty(novoUsuario.Email) || string.IsNullOrEmpty(novoUsuario.Senha))
             {
-                var existe = await _context.Usuarios.AnyAsync(u => u.Email == novoUsuario.Email);
-                if (existe)
-                {
-                    ViewBag.Erro = "Este e-mail já está cadastrado!";
-                    return View(novoUsuario);
-                }
+                ViewBag.Erro = "Por favor, preencha todos os campos obrigatórios!";
+                return View(novoUsuario);
+            }
 
+            var existe = await _context.Usuarios.AnyAsync(u => u.Email == novoUsuario.Email);
+            if (existe)
+            {
+                // AVISO DE ERRO NO CADASTRO
+                ViewBag.Erro = "Este e-mail já está sendo usado por outro protetor do planeta! 🌍";
+                return View(novoUsuario);
+            }
+
+            try 
+            {
                 novoUsuario.Pontos = 0;
-
                 _context.Usuarios.Add(novoUsuario);
                 await _context.SaveChangesAsync(); 
-
                 return RedirectToAction("Login");
             }
-            return View(novoUsuario);
+            catch (System.Exception)
+            {
+                ViewBag.Erro = "Ops! Houve um erro técnico ao salvar. Tente novamente em instantes.";
+                return View(novoUsuario);
+            }
         }
 
         public IActionResult Logout()

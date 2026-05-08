@@ -1,13 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Ecologica.Models.Data;
 
 #nullable disable
 
 namespace Ecologica.Migrations
 {
     /// <inheritdoc />
-    public partial class CriarTabelaConquistas : Migration
+    public partial class InicialEcologica : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +18,8 @@ namespace Ecologica.Migrations
                     id_atividade = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     nome = table.Column<string>(type: "TEXT", nullable: false),
-                    fator_emissao = table.Column<double>(type: "REAL", nullable: false)
+                    fator_emissao = table.Column<double>(type: "REAL", nullable: false),
+                    UnidadeMedida = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -33,7 +33,7 @@ namespace Ecologica.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Nome = table.Column<string>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", nullable: false),
+                    Descricao = table.Column<string>(type: "TEXT", nullable: true),
                     DataAquisicao = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UsuarioId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
