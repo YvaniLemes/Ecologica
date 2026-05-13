@@ -1,0 +1,31 @@
+# Pastas de build e cache
+bin/
+obj/
+.vs/
+.vscode/
+
+# Arquivos de usuário e IDE
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Bancos de dados locais
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+# Logs e temporários
+*.log
+*.tmp
+*.bak
+
+# Configurações específicas de ambiente
+appsettings.Development.json
+
+# Arquivos gerados automaticamente
+*.generated.cs
+*.designer.cs
+*.g.cs
+
