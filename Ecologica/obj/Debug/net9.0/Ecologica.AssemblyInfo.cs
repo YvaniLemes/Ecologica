@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Ecologica")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a42bec91864e6e85e022078b1055ae82587bf837")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+34da6ec0fe36942e39717d7d58b3664fe12ba774")]
 [assembly: System.Reflection.AssemblyProductAttribute("Ecologica")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Ecologica")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
