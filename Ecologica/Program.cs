@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Ecologica.Models.Data;
+using Ecologica.Data;
 using Ecologica.Models;
 
 var builder = WebApplication.CreateBuilder(args);

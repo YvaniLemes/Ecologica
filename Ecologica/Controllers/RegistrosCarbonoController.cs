@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Ecologica.Models.Data; // Para encontrar a pasta Data
+using Ecologica.Data;
 using Ecologica.Models;      // Para encontrar os modelos 
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;

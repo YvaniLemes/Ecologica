@@ -2,118 +2,130 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
+    // ISSO REMOVE A BARRA SUPERIOR QUE ESTÁ TE INCOMODANDO:
+    Layout = null; 
+    
     ViewData["Title"] = "Página Inicial";
     var nomeUsuario = HttpContextAccessor.HttpContext?.Session?.GetString("NomeUsuario");
 }
 
-<style>
-    /* Estilo Global */
-    body {
-        background-color: #f4f7f5;
-        overflow-x: hidden;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ecologica - Bem-vindo</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        /* Estilo Global */
+        body {
+            background-color: #f4f7f5;
+            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-    /* Card Central Elevado */
-    .hero-card {
-        background-color: rgba(255, 255, 255, 0.95);
-        border-radius: 30px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
-        padding: 5rem 2rem;
-        position: relative;
-        overflow: hidden;
-        border: none;
-        margin-top: 2rem;
-        z-index: 1;
-    }
+        /* Card Central Elevado */
+        .hero-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+            padding: 5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            z-index: 1;
+            width: 100%;
+        }
 
-    /* Decoração de Fundo (Trevos) */
-    .clover-background {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-        pointer-events: none;
-        opacity: 0.15;
-    }
+        /* Decoração de Fundo (Trevos) */
+        .clover-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.15;
+        }
 
-    .clover {
-        position: absolute;
-        font-size: 2.5rem;
-    }
+        .clover {
+            position: absolute;
+            font-size: 2.5rem;
+        }
 
-    /* Tipografia Principal */
-    .display-main {
-        font-size: 4.5rem;
-        font-weight: 800;
-        color: #1b4d2c;
-        position: relative;
-        z-index: 2;
-        margin-bottom: 0.5rem;
-        letter-spacing: -1px;
-    }
+        /* Tipografia Principal */
+        .display-main {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: #1b4d2c;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
 
-    .subtitle-main {
-        color: #556b5c;
-        font-size: 1.3rem;
-        position: relative;
-        z-index: 2;
-        font-weight: 400;
-        margin-bottom: 2rem;
-    }
+        .subtitle-main {
+            color: #556b5c;
+            font-size: 1.3rem;
+            position: relative;
+            z-index: 2;
+            font-weight: 400;
+            margin-bottom: 2rem;
+        }
 
-    .custom-hr {
-        width: 80px;
-        height: 4px;
-        background-color: #28a745;
-        margin: 1.5rem auto;
-        border: none;
-        border-radius: 10px;
-        position: relative;
-        z-index: 2;
-    }
+        .custom-hr {
+            width: 80px;
+            height: 4px;
+            background-color: #28a745;
+            margin: 1.5rem auto;
+            border: none;
+            border-radius: 10px;
+            position: relative;
+            z-index: 2;
+        }
 
-    /* OS BOTÕES QUE VOCÊ QUERIA AJUSTAR */
-    .btn-custom {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 28px;
-        background-color: #1b4d2c;
-        /* Verde escuro base */
-        color: white !important;
-        text-decoration: none !important;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
-        /* Transição suave para o efeito "acender" */
-        border: none;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        min-width: 180px;
-    }
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            background-color: #1b4d2c;
+            color: white !important;
+            text-decoration: none !important;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            min-width: 180px;
+        }
 
-    /* Efeito de "Acender" ao passar o mouse (Hover) */
-    .btn-custom:hover {
-        background-color: #28a745;
-        /* Verde vibrante que "acende" */
-        transform: translateY(-3px);
-        /* Leve pulo para cima */
-        box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
-        color: white !important;
-    }
+        .btn-custom:hover {
+            background-color: #28a745;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+            color: white !important;
+        }
 
-    .btn-container {
-        display: flex;
-        gap: 20px;
-        justify-content: center;
-        margin-top: 30px;
-        position: relative;
-        z-index: 3;
-    }
-</style>
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            position: relative;
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
 
 <div class="container">
     <div class="row justify-content-center">
@@ -144,12 +156,13 @@
                             <p class="text-muted">Seu painel está pronto. O que vamos calcular hoje?</p>
 
                             <div class="btn-container">
-                                <a href="@Url.Action("Create", "Atividade")" class="btn-custom">
-                                    Novo Cálculo
-                                </a>
-                                <a href="@Url.Action("Index", "Atividade")" class="btn-custom">
-                                    Meu Histórico
-                                </a>
+                                <a href="@Url.Action("Create", "Atividade")" class="btn-custom">Novo Cálculo</a>
+                                <a href="@Url.Action("Index", "Atividade")" class="btn-custom">Meu Histórico</a>
+                                <a href="@Url.Action("Index", "Trilha")" class="btn-custom" style="background-color: #28a745;">Trilha Ecológica</a>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <a asp-controller="Usuario" asp-action="Logout" class="text-danger text-decoration-none fw-bold">Sair do sistema</a>
                             </div>
                         </div>
                     }
@@ -157,7 +170,7 @@
                     {
                         <div class="mt-5">
                             <a asp-controller="Usuario" asp-action="Login"
-                                   class="btn btn-success btn-lg px-5 py-3 shadow fw-bold" style="border-radius: 12px;">
+                               class="btn btn-success btn-lg px-5 py-3 shadow fw-bold" style="border-radius: 12px;">
                                 COMEÇAR AGORA <i class="bi bi-arrow-right ms-2"></i>
                             </a>
                         </div>
@@ -167,3 +180,6 @@
         </div>
     </div>
 </div>
+
+</body>
+</html>

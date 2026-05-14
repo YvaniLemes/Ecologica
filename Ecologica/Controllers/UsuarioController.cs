@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Ecologica.Models.Data; 
+using Ecologica.Data;
 using Ecologica.Models;      
 
 namespace Ecologica.Controllers

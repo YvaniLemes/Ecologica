@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Ecologica.Models.Data; 
+using Ecologica.Data;
 using Ecologica.Models;      
 using System.Collections.Generic;
 
