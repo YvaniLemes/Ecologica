@@ -5,17 +5,25 @@
     ViewData["Title"] = "Trilha do Conhecimento";
 }
 
-@* Cabeçalho de Status *@
+@* Cabeçalho de Status - Gamificação da Floresta Acumulativa *@
 <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #f0fdf4; border-radius: 15px; margin-bottom: 20px; border: 1px solid #dcfce7; max-width: 700px; margin-left: auto; margin-right: auto;">
-    <div>
-        <span style="font-weight: bold; color: #166534; margin-right: 10px;">Vidas:</span>
-        @for (int i = 0; i < ViewBag.ArvoresVidas; i++)
+    <div style="display: flex; align-items: center;">
+        <span style="font-weight: bold; color: #166534; margin-right: 10px;">Sua Floresta:</span>
+        @if (ViewBag.ArvoresPlantadas == 0)
         {
-            <img src="~/img/tree.png" width="22" style="margin-right: 3px;" alt="Vida" />
+            <span style="color: #166534; font-size: 0.9rem; font-style: italic;">🌱 (Comece a plantar!)</span>
+        }
+        else
+        {
+            @for (int i = 0; i < ViewBag.ArvoresPlantadas; i++)
+            {
+                <img src="~/img/tree.png" width="22" style="margin-right: 4px;" title="Árvore Conquistada!" alt="Árvore" />
+            }
         }
     </div>
+
     <div style="font-weight: bold; color: #166534;">
-        Pontos: 150 XP 🌿
+        Pontos: @ViewBag.TotalXP XP 🌿
     </div>
 </div>
 

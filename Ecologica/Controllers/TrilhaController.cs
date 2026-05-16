@@ -14,19 +14,25 @@ namespace Ecologica.Controllers
             _context = context;
         }
 
-        // Lista todas as etapas da trilha
+        // Exibe o mapa da trilha
         public IActionResult Index()
         {
-            // O código de reset FOI REMOVIDO daqui para o progresso salvar de verdade!
             var listaDaTrilha = _context.trilha_progresso.ToList();
-            ViewBag.ArvoresVidas = 5; 
+            
+            // Busca o nosso usuário no banco para ler os dados reais dele
+            var usuario = _context.Usuarios.FirstOrDefault();
+            
+            // Se o usuário existir, mandamos os dados reais dele para a tela.
+            // Se não existir, usamos valores padrão (0) para não quebrar a tela.
+            ViewBag.TotalXP = usuario != null ? usuario.Pontos : 0;
+            ViewBag.ArvoresPlantadas = usuario != null ? usuario.QuantidadeArvores : 0;
+
             return View(listaDaTrilha);
         }
 
-        // Abre a página de conteúdo da lição
         public IActionResult Detalhes(int id)
         {
-            var etapa = _context.trilha_progresso.FirstOrDefault(t => t.Id == id);
+            TrilhaConhecimento? etapa = _context.trilha_progresso.FirstOrDefault(t => t.Id == id);
 
             if (etapa == null || etapa.EstaBloqueado)
             {
@@ -36,24 +42,54 @@ namespace Ecologica.Controllers
             return View(etapa);
         }
 
-        // AÇÃO PARA CONCLUIR: Faz o progresso avançar e desbloqueia a próxima fase
+        // AÇÃO PRINCIPAL: Avança ou Finaliza a Trilha
         [HttpPost]
         public IActionResult ConcluirEtapa(int id)
         {
-            var etapaAtual = _context.trilha_progresso.FirstOrDefault(t => t.Id == id);
-            
+            TrilhaConhecimento? etapaAtual = _context.trilha_progresso.FirstOrDefault(t => t.Id == id);
+            var usuario = _context.Usuarios.FirstOrDefault(); // Pega o jogador atual
+
             if (etapaAtual != null)
             {
-                etapaAtual.Progresso = 1.0; // Define como concluída
-
-                var proximaEtapa = _context.trilha_progresso.FirstOrDefault(t => t.Id == id + 1);
-                
-                if (proximaEtapa != null)
+                // Se a lição ainda não tinha sido concluída antes, dá os 100 pontos para o usuário
+                if (etapaAtual.Progresso < 1.0 && usuario != null)
                 {
-                    proximaEtapa.EstaBloqueado = false; // Desbloqueia a próxima (ela virará broto!)
+                    usuario.Pontos += 100;
                 }
 
-                _context.SaveChanges();
+                etapaAtual.Progresso = 1.0; // Conclui a lição atual
+
+                // Se for a ÚLTIMA LIÇÃO (Desafio Final - Id 3), o ciclo se completa!
+                if (id == 3)
+                {
+                    if (usuario != null)
+                    {
+                        usuario.QuantidadeArvores += 1; // 🌳 GANHOU MAIS UMA ÁRVORE PERMANENTE!
+                    }
+
+                    // RESET DO MAPA: Prepara a trilha para o "New Game Plus" (recomeçar)
+                    var todasEtapas = _context.trilha_progresso.ToList();
+                    foreach (var etapa in todasEtapas)
+                    {
+                        etapa.Progresso = 0.0;
+                        etapa.EstaBloqueado = true; // Tranca tudo
+                    }
+
+                    // Destranca apenas a primeira para reiniciar o ciclo
+                    var primeira = todasEtapas.OrderBy(t => t.Id).FirstOrDefault();
+                    if (primeira != null) primeira.EstaBloqueado = false;
+                }
+                else
+                {
+                    // Se NÃO for a última, apenas destranca a próxima fase normalmente
+                    TrilhaConhecimento? proximaEtapa = _context.trilha_progresso.FirstOrDefault(t => t.Id == id + 1);
+                    if (proximaEtapa != null)
+                    {
+                        proximaEtapa.EstaBloqueado = false;
+                    }
+                }
+
+                _context.SaveChanges(); // Salva tudo de uma vez só no SQLite!
             }
 
             return RedirectToAction("Index");
