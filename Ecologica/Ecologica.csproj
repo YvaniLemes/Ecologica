@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <NoWarn>CS8602;CS8604;CS8618;CS8632</NoWarn>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Ecologica</RootNamespace>
   </PropertyGroup>

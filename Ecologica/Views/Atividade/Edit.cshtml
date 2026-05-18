@@ -1,22 +1,42 @@
 @model Ecologica.Models.RegistroCarbonoModel
 
-<div class="container">
-    <h2>Editar Registro</h2>
-    <hr />
-    <form asp-action="Edit">
-        <input type="hidden" asp-for="Id" />
-        <div class="form-group mb-3">
-            <label class="control-label">Tipo de Atividade</label>
-            <select asp-for="IdAtividade" class="form-control" 
-                    asp-items="@(new SelectList(ViewBag.ListaAtividades, "Id", "Nome"))"></select>
-        </div>
-        <div class="form-group mb-3">
-            <label class="control-label">Quantidade (km ou kWh)</label>
-            <input asp-for="Quantidade" class="form-control" />
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-            <a asp-action="Index" class="btn btn-secondary">Voltar</a>
-        </div>
-    </form>
+@{
+    ViewData["Title"] = "Editar Registro";
+}
+
+<div class="container mt-4" style="max-width: 600px;">
+    <div class="card shadow-sm border-0 rounded-3 p-4">
+        <h2 class="text-success fw-bold mb-2">✏️ Editar Registro</h2>
+        <p class="text-muted mb-4">Modifique os dados abaixo para recalcular sua pegada de carbono.</p>
+        <hr class="text-muted mb-4" />
+
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group mb-3">
+                <label class="control-label fw-bold mb-1">Tipo de Atividade</label>
+                <select asp-for="IdAtividade" class="form-control rounded-3"
+                        asp-items="@(new SelectList(ViewBag.ListaAtividades, "Id", "Nome"))">
+                </select>
+                <span asp-validation-for="IdAtividade" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="control-label fw-bold mb-1">Quantidade (km, kWh ou kg)</label>
+                <input asp-for="Quantidade" class="form-control rounded-3" type="number" step="any" required />
+                <span asp-validation-for="Quantidade" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group d-flex gap-2">
+                <button type="submit" class="btn btn-success fw-bold px-4 rounded-pill">Salvar Alterações</button>
+                <a asp-action="Historico" class="btn btn-outline-secondary fw-bold px-4 rounded-pill">Voltar</a>
+            </div>
+        </form>
+    </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

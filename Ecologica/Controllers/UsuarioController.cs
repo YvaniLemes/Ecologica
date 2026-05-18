@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Ecologica.Data;
-using Ecologica.Models;      
+using Ecologica.Models;
 
 namespace Ecologica.Controllers
 {
@@ -26,17 +26,23 @@ namespace Ecologica.Controllers
             if (senha == "admin123" && (email == "marcelo@ecologica.com" || email == "elton@ecologica.com" || email == "yvani@ecologica.com"))
             {
                 string nomeLimpo = email.Split('@')[0];
-                HttpContext.Session.SetString("UsuarioNome", char.ToUpper(nomeLimpo[0]) + nomeLimpo.Substring(1));
+                string nomeFormatado = char.ToUpper(nomeLimpo[0]) + nomeLimpo.Substring(1);
+
+                // AJUSTADO: "UsuarioNome" para bater com o que o AtividadeController espera
+                HttpContext.Session.SetString("UsuarioNome", nomeFormatado);
                 HttpContext.Session.SetInt32("UsuarioId", 999);
                 return RedirectToAction("Index", "Atividade");
             }
 
+            // Busca o usuário de forma assíncrona
             var usuarioEncontrado = await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
 
+            // GARANTIA: Verificação exata da variável correta ("usuarioEncontrado")
             if (usuarioEncontrado != null)
             {
-                HttpContext.Session.SetString("UsuarioNome", usuarioEncontrado.Nome ?? "");
+                // AJUSTADO: "UsuarioNome" garantido com fallback seguro para evitar avisos CS8602
+                HttpContext.Session.SetString("UsuarioNome", usuarioEncontrado.Nome ?? "Usuário");
                 HttpContext.Session.SetInt32("UsuarioId", usuarioEncontrado.Id);
                 return RedirectToAction("Index", "Atividade");
             }
@@ -66,11 +72,11 @@ namespace Ecologica.Controllers
                 return View(novoUsuario);
             }
 
-            try 
+            try
             {
                 novoUsuario.Pontos = 0;
                 _context.Usuarios.Add(novoUsuario);
-                await _context.SaveChangesAsync(); 
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Login");
             }
             catch (System.Exception)
@@ -80,6 +86,7 @@ namespace Ecologica.Controllers
             }
         }
 
+        //MÉTODO DE LOGOUT QUE FAZ O "VOLTAR" FUNCIONAR COM SEGURANÇA
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();

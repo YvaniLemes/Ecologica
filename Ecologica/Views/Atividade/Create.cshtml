@@ -1,74 +1,233 @@
 @model Ecologica.Models.RegistroCarbonoModel
 
-<div class="container">
-    <h2>Novo Cálculo</h2>
-    <form asp-action="Create">
-        <div class="form-group">
-            <label>Tipo de Atividade</label>
-            <select asp-for="IdAtividade" class="form-control" 
-                    asp-items="@(new SelectList(ViewBag.ListaAtividades, "Id", "Nome"))">
-            </select>
-        </div>
-        <div class="form-group mt-3">
-            <label>Quantidade (km, kWh ou kg)</label>
-            <input asp-for="Quantidade" class="form-control" />
-        </div>
-        <button type="submit" class="btn btn-primary mt-3">Calcular e Salvar</button>
-    </form>
+@{
+    ViewData["Title"] = "Novo Cálculo";
+}
 
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">Guia de Preenchimento: Como medir seu consumo?</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Atividade</th>
-                                <th>O que informar</th>
-                                <th>Onde encontrar o dado?</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Energia Elétrica</strong></td>
-                                <td>kWh</td>
-                                <td>Consulte o "Consumo do Mês" na sua conta de luz (ex: Enel).</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Viagem de Carro/Moto</strong></td>
-                                <td>km</td>
-                                <td>Distância percorrida (Odômetro ou Google Maps).</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Consumo de Gás (GLP)</strong></td>
-                                <td>kg ou m³</td>
-                                <td>Peso do botijão ou consumo medido na conta do condomínio.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Viagem de Avião</strong></td>
-                                <td>km</td>
-                                <td>Distância total do voo (você pode consultar em sites como Air Miles Calculator).</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Alimentação (Carnes/Vegetais)</strong></td>
-                                <td>kg</td>
-                                <td>Peso aproximado da porção consumida (ex: 0.2 para 200g).</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Lixo Doméstico</strong></td>
-                                <td>kg ou Litros</td>
-                                <td>Capacidade do saco de lixo preenchido (ex: saco de 50L).</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p class="text-muted small">
-                        * O <strong>Ecologica</strong> processa esses valores com base em fatores de emissão oficiais para gerar seu histórico em kgCO2.
-                    </p>
+<div class="container mt-4" style="max-width: 900px;">
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0 rounded-3 p-4 h-100">
+                <h2 class="text-success fw-bold mb-2">🌱 Novo Cálculo</h2>
+                <p class="text-muted mb-4">Arraste a barra para estimar o seu consumo e ver o impacto na hora.</p>
+                <hr class="text-muted mb-4" />
+
+                <form asp-action="Create">
+                    <div class="form-group mb-4">
+                        <label class="control-label fw-bold mb-2">O que você fez hoje?</label>
+                        <select asp-for="IdAtividade" id="selectAtividade"
+                                class="form-select rounded-3 p-2 text-success fw-bold" required>
+                            <option value="" data-fator="0" data-unidade="unidades">-- Selecione uma atividade --
+                            </option>
+                            @if (ViewBag.ListaAtividades != null)
+                            {
+                                foreach (var atividade in ViewBag.ListaAtividades)
+                                {
+                                    // Passamos o fator de emissão no atributo "data-fator" para o JavaScript ler
+                                    <option value="@atividade.Id"
+                                            data-fator="@atividade.FatorEmissao.ToString("F4", System.Globalization.CultureInfo.InvariantCulture)">
+                                        @atividade.Nome
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-4" id="blocoSlider" style="display: none;">
+                        <label class="control-label fw-bold d-flex justify-content-between mb-1">
+                            <span>Quantidade Consumida:</span>
+                            <span id="labelUnidade" class="text-success fw-bold fs-5">0</span>
+                        </label>
+
+                        <input type="range" asp-for="Quantidade" id="sliderQuantidade" class="form-range" min="0"
+                               max="100" step="0.5" value="0" />
+
+                        <div id="legendaContexto"
+                             class="text-muted small text-center mt-2 border border-light p-2 bg-light rounded-3 italic">
+                            Selecione ou ajuste a barra para ver exemplos práticos.
+                        </div>
+                    </div>
+
+                    <div class="form-group d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-success fw-bold px-4 rounded-pill shadow-sm">Calcular e
+                            Salvar</button>
+                            <a asp-action="Historico"
+                               class="btn btn-outline-secondary fw-bold px-4 rounded-pill">Cancelar</a>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-3 text-white h-100 p-4 transition-card" id="painelImpacto"
+                     style="background: linear-gradient(135deg, #198754, #115c39);">
+                    <div class="d-flex flex-column justify-content-between h-100">
+                        <div>
+                            <h4 class="fw-bold mb-3">📊 Impacto Estimado</h4>
+                            <p class="opacity-75">Veja a pegada ecológica gerada por essa ação em tempo real:</p>
+
+                            <div class="text-center my-4 py-3 bg-white bg-opacity-10 rounded-3">
+                                <span id="co2Resultado" class="display-3 fw-bold">0.00</span>
+                                <span class="fs-4 d-block fw-light text-white opacity-75">kg de CO₂ gerados</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-2">
+                            <h6 class="fw-bold text-warning mb-3">💡 O que isso significa na prática?</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-3 d-flex align-items-center">
+                                    <span class="fs-2 me-3">🌳</span>
+                                    <div>
+                                        <small class="d-block opacity-75">Compensação florestal</small>
+                                        <span class="fw-bold" id="equivArvores">Equivale ao trabalho de 0 árvores por um
+                                            dia</span>
+                                        </div>
+                                    </li>
+                                    <li class="mb-0 d-flex align-items-center">
+                                        <span class="fs-2 me-3">💡</span>
+                                        <div>
+                                            <small class="d-block opacity-75">Consumo elétrico residencial</small>
+                                            <span class="fw-bold" id="equivLampadas">O mesmo que manter uma lâmpada ligada por 0
+                                                horas</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @section Scripts {
+                @{
+                    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+                }
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const selectAtividade = document.getElementById("selectAtividade");
+                        const blocoslider = document.getElementById("blocoSlider");
+                        const slider = document.getElementById("sliderQuantidade");
+                        const labelUnidade = document.getElementById("labelUnidade");
+                        const legendaContexto = document.getElementById("legendaContexto");
+
+                        // Elementos do painel de impacto
+                        const co2Resultado = document.getElementById("co2Resultado");
+                        const equivArvores = document.getElementById("equivArvores");
+                        const equivLampadas = document.getElementById("equivLampadas");
+                        const painelImpacto = document.getElementById("painelImpacto");
+
+                        function atualizarCalculos() {
+                            const opcaoSelecionada = selectAtividade.options[selectAtividade.selectedIndex];
+                            if (!opcaoSelecionada || !opcaoSelecionada.value) {
+                                blocoslider.style.display = "none";
+                                resetarPainel();
+                                return;
+                            }
+
+                            blocoslider.style.display = "block";
+                            const textoAtividade = opcaoSelecionada.text.toLowerCase();
+                            const fatorEmissao = parseFloat(opcaoSelecionada.getAttribute("data-fator")) || 0;
+
+                            // Configuração dinâmica de unidades, limites e legendas textuais baseada na atividade
+                            let unidade = "unidades";
+                            let valorAtual = parseFloat(slider.value);
+                            let contexto = "";
+
+                            if (textoAtividade.includes("energia") || textoAtividade.includes("luz")) {
+                                unidade = "kWh";
+                                slider.max = 200;
+                                if (valorAtual > 200) slider.value = 200;
+
+                                if (valorAtual <= 30) contexto = "🔌 Consumo baixo (Aparelhos em standby durante o mês)";
+                                else if (valorAtual <= 100) contexto = "🏠 Consumo médio de uma casa pequena por duas semanas";
+                                else contexto = "⚡ Uso intenso: Ar-condicionado ou chuveiro elétrico de longa duração";
+
+                            } else if (textoAtividade.includes("carro") || textoAtividade.includes("moto") || textoAtividade.includes("viagem")) {
+                                unidade = "km";
+                                slider.max = 150;
+                                if (valorAtual > 150) slider.value = 150;
+
+                                if (valorAtual <= 10) contexto = "🚗 Um trajeto rápido pela cidade (ir à padaria ou mercado próximo)";
+                                else if (valorAtual <= 50) contexto = "🛣️ Deslocamento diário completo de ida e volta para o trabalho/escola";
+                                else contexto = "🗺️ Viagem intermunicipal de fim de semana";
+
+                            } else if (textoAtividade.includes("carne") || textoAtividade.includes("alimentação") || textoAtividade.includes("bife")) {
+                                unidade = "kg";
+                                slider.max = 5;
+                                if (valorAtual > 5) slider.value = 5;
+
+                                if (valorAtual <= 0.3) contexto = "🥩 Um bife de tamanho médio em uma única refeição";
+                                else if (valorAtual <= 1.5) contexto = "🔥 Consumo de carne para o churrasco de domingo de uma família pequena";
+                                else contexto = "🛒 Estoque de carne vermelha para a semana inteira";
+
+                            } else if (textoAtividade.includes("lixo") || textoAtividade.includes("resíduos")) {
+                                unidade = "kg";
+                                slider.max = 30;
+                                if (valorAtual > 30) slider.value = 30;
+
+                                if (valorAtual <= 5) contexto = "🗑️ Descarte diário de uma pessoa";
+                                else if (valorAtual <= 15) contexto = "🛍️ Sacos de lixo de tamanho médio cheios no fim de semana";
+                                else contexto = "🏢 Grande volume acumulado de resíduos não reciclados";
+                            }
+
+                            // Exibe a quantidade e a unidade na tela
+                            labelUnidade.textContent = valorAtual + " " + unidade;
+                            legendaContexto.textContent = contexto;
+
+                            // Executa a conta em tempo real (Quantidade * Fator)
+                            let co2Total = valorAtual * fatorEmissao;
+                            co2Resultado.textContent = co2Total.toFixed(2);
+
+                            // Altera a cor do card de impacto caso a emissão esteja muito alta (Alerta Visual!)
+                            if (co2Total > 25) {
+                                painelImpacto.style.background = "linear-gradient(135deg, #dc3545, #8a1f29)"; // Vermelho Alerta
+                            } else if (co2Total > 10) {
+                                painelImpacto.style.background = "linear-gradient(135deg, #ffc107, #b88600)"; // Amarelo Atenção
+                                painelImpacto.classList.add("text-dark");
+                            } else {
+                                painelImpacto.style.background = "linear-gradient(135deg, #198754, #115c39)"; // Verde Seguro
+                                painelImpacto.classList.remove("text-dark");
+                            }
+
+                            // Cálculo das Equivalências Didáticas
+                            // 1 árvore absorve cerca de 0.04 kg de CO2 por dia
+                            let diasArvore = co2Total / 0.04;
+                            if (co2Total === 0) {
+                                equivArvores.textContent = "Equivale ao trabalho de 0 árvores por um dia";
+                            } else if (diasArvore < 30) {
+                                equivArvores.textContent = `Uma árvore precisará trabalhar por ${Math.ceil(diasArvore)} dias para absorver isso`;
+                            } else {
+                                let mesesArvore = diasArvore / 30;
+                                equivArvores.textContent = `Uma árvore precisará trabalhar por ${mesesArvore.toFixed(1)} meses para limpar esse impacto`;
+                            }
+
+                            // Uma lâmpada LED ligada por 1 hora gera aproximadamente 0.01 kg de CO2
+                            let horasLampada = co2Total / 0.01;
+                            equivLampadas.textContent = `O mesmo que manter uma lâmpada ligada por ${Math.ceil(horasLampada)} horas seguidas`;
+                        }
+
+                        function resetarPainel() {
+                            co2Resultado.textContent = "0.00";
+                            equivArvores.textContent = "Equivale ao trabalho de 0 árvores por um dia";
+                            equivLampadas.textContent = "O mesmo que manter uma lâmpada ligada por 0 horas";
+                            painelImpacto.style.background = "linear-gradient(135deg, #198754, #115c39)";
+                            painelImpacto.classList.remove("text-dark");
+                        }
+
+                        // Escuta as alterações no Select e no Slider para recalcular na hora
+                        selectAtividade.addEventListener("change", function () {
+                            slider.value = 0; // Reseta o slider ao trocar de atividade
+                            atualizarCalculos();
+                        });
+                        slider.addEventListener("input", atualizarCalculos);
+                    });
+                </script>
+
+                <style>
+                    .transition-card {
+                        transition: background 0.5s ease, color 0.3s ease;
+                    }
+                </style>
+            }

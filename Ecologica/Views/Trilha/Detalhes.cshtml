@@ -11,88 +11,109 @@
             <div class="card shadow border-0 p-4" style="border-radius: 25px; background-color: #ffffff;">
                 <div class="text-center">
                     @* A imagem evolui: semente -> broto -> árvore *@
-                    <div class="mb-3" style="background: #f0fdf4; display: inline-block; padding: 20px; border-radius: 50%;">
+                    <div class="mb-3"
+                         style="background: #f0fdf4; display: inline-block; padding: 20px; border-radius: 50%;">
                         <img src="~/img/@Model.ObterImagemProgresso()" width="100" alt="Progresso da Lição" />
                     </div>
-                    
+
                     <h2 class="text-success fw-bold">@Model.Titulo</h2>
-                    <div style="width: 60px; height: 4px; background-color: #28a745; margin: 15px auto; border-radius: 10px;"></div>
+                    <div
+                        style="width: 60px; height: 4px; background-color: #28a745; margin: 15px auto; border-radius: 10px;">
+                    </div>
                 </div>
 
                 @* Conteúdo Educativo Dinâmico baseado no Título da Lição com Fontes *@
-                <div class="mt-4 p-3" style="font-size: 1.15rem; line-height: 1.8; color: #2d3748; text-align: justify; background-color: #fafafa; border-radius: 15px; padding: 25px !important;">
-                    
+                <div class="mt-4 p-3"
+                     style="font-size: 1.15rem; line-height: 1.8; color: #2d3748; text-align: justify; background-color: #fafafa; border-radius: 15px; padding: 25px !important;">
+
                     @if (Model.Titulo != null && Model.Titulo.Contains("Introdução"))
                     {
                         <h4 class="text-success fw-bold mb-3">O que é a Pegada de Carbono? 🌍</h4>
-                        <p>A <strong>Pegada de Carbono</strong> é a quantidade total de gases de efeito estufa (incluindo o gás carbônico e o metano) que são gerados pelas nossas ações diárias. Cada vez que andamos de carro, deixamos as luzes acesas sem necessidade ou compramos um produto industrializado, estamos liberando gases que aquecem o planeta.</p>
-                        <p>Entender a nossa pegada é o primeiro passo para o consumo consciente. Pequenas mudanças de hábito, como reduzir o desperdício de alimentos e escolher transporte público ou bicicleta, geram um impacto positivo gigantesco no ecossistema global!</p>
-                        
-                        <hr style="border-top: 1px dashed #28a745; margin-top: 30px;">
-                        <small class="text-muted d-block" style="font-size: 0.85rem; line-height: 1.4;">
-                            <strong>Fontes consultadas:</strong> <br>
-                            • Painel Intergovernamental sobre Mudanças Climáticas (IPCC). <br>
-                            • Ministério do Meio Ambiente e Mudança do Clima (MMA).
-                        </small>
-                    }
+                        <p>A <strong>Pegada de Carbono</strong> é a quantidade total de gases de efeito estufa (incluindo o
+                            gás carbônico e o metano) que são gerados pelas nossas ações diárias. Cada vez que andamos de
+                            carro, deixamos as luzes acesas sem necessidade ou compramos um produto industrializado, estamos
+                            liberando gases que aquecem o planeta.</p>
+                            <p>Entender a nossa pegada é o primeiro passo para o consumo consciente. Pequenas mudanças de
+                                hábito, como reduzir o desperdício de alimentos e escolher transporte público ou bicicleta,
+                                geram um impacto positivo gigantesco no ecossistema global!</p>
+
+                                <hr style="border-top: 1px dashed #28a745; margin-top: 30px;">
+                                <small class="text-muted d-block" style="font-size: 0.85rem; line-height: 1.4;">
+                                    <strong>Fontes consultadas:</strong> <br>
+                                    • Painel Intergovernamental sobre Mudanças Climáticas (IPCC). <br>
+                                    • Ministério do Meio Ambiente e Mudança do Clima (MMA).
+                                </small>
+                            }
                     else if (Model.Titulo != null && Model.Titulo.Contains("Cálculo"))
-                    {
-                        <h4 class="text-success fw-bold mb-3">Como as Emissões são Calculadas? 📊</h4>
-                        <p>Para medir o nosso impacto, cientistas criaram fatores de emissão baseados em dados reais. Por exemplo, sabendo a quantidade de litros de combustível que um carro consome ou os kWh de energia elétrica que a sua casa gasta por mês, conseguimos converter esse consumo diretamente em <strong>kg de CO2 equivalentes</strong>.</p>
-                        <p>O objetivo do projeto <strong>Ecologica</strong> é justamente simplificar esse cálculo matemático complexo, transformando as suas atividades cotidianas em dados visuais fáceis de compreender. Medir é a chave para gerenciar e reduzir!</p>
-                        
-                        <hr style="border-top: 1px dashed #28a745; margin-top: 30px;">
-                        <small class="text-muted d-block" style="font-size: 0.85rem; line-height: 1.4;">
-                            <strong>Fontes consultadas:</strong> <br>
-                            • <i>The Greenhouse Gas Protocol (GHG Protocol)</i> - Padrão Corporativo Global. <br>
-                            • Programa Brasileiro GHG Protocol / FGV-GVces.
-                        </small>
-                    }
+                            {
+                                <h4 class="text-success fw-bold mb-3">Como as Emissões são Calculadas? 📊</h4>
+                                <p>Para medir o nosso impacto, cientistas criaram fatores de emissão baseados em dados reais. Por
+                                    exemplo, sabendo a quantidade de litros de combustível que um carro consome ou os kWh de energia
+                                    elétrica que a sua casa gasta por mês, conseguimos converter esse consumo diretamente em
+                                    <strong>kg de CO2 equivalentes</strong>.
+                                </p>
+                                <p>O objetivo do projeto <strong>Ecologica</strong> é justamente simplificar esse cálculo matemático
+                                    complexo, transformando as suas atividades cotidianas em dados visuais fáceis de compreender.
+                                    Medir é a chave para gerenciar e reduzir!</p>
+
+                                    <hr style="border-top: 1px dashed #28a745; margin-top: 30px;">
+                                    <small class="text-muted d-block" style="font-size: 0.85rem; line-height: 1.4;">
+                                        <strong>Fontes consultadas:</strong> <br>
+                                        • <i>The Greenhouse Gas Protocol (GHG Protocol)</i> - Padrão Corporativo Global. <br>
+                                        • Programa Brasileiro GHG Protocol / FGV-GVces.
+                                    </small>
+                                }
                     else if (Model.Titulo != null && Model.Titulo.Contains("Desafio"))
-                    {
-                        <h4 class="text-success fw-bold mb-3">O Grande Desafio: Rumo ao Carbono Zero! 🌿</h4>
-                        <p>Parabéns por chegar até aqui! O <strong>Desafio Final</strong> não é apenas uma lição, mas um chamado para a ação. A neutralização de carbono acontece quando equilibramos o que emitimos com ações de absorção, como o plantio de árvores e o apoio a energias renováveis (solar e eólica).</p>
-                        <p>A partir de agora, você está qualificado para monitorar suas emissões diárias e incentivar a sua comunidade a adotar práticas mais sustentáveis. O future do planeta depende das escolhas que fazemos hoje!</p>
-                        
-                        <hr style="border-top: 1px dashed #28a745; margin-top: 30px;">
-                        <small class="text-muted d-block" style="font-size: 0.85rem; line-height: 1.4;">
-                            <strong>Fontes consultadas:</strong> <br>
-                            • Organização das Nações Unidas (ONU) - Campanha <i>ActNow</i> (Comece por Você) para Ação Climática.
-                        </small>
-                    }
+                                {
+                                    <h4 class="text-success fw-bold mb-3">O Grande Desafio: Rumo ao Carbono Zero! 🌿</h4>
+                                    <p>Parabéns por chegar até aqui! O <strong>Desafio Final</strong> não é apenas uma lição, mas um
+                                        chamado para a ação. A neutralização de carbono acontece quando equilibramos o que emitimos com
+                                        ações de absorção, como o plantio de árvores e o apoio a energias renováveis (solar e eólica).
+                                    </p>
+                                    <p>A partir de agora, você está qualificado para monitorar suas emissões diárias e incentivar a sua
+                                        comunidade a adotar práticas mais sustentáveis. O futuro do planeta depende das escolhas que
+                                        fazemos hoje!</p>
+
+                                        <hr style="border-top: 1px dashed #28a745; margin-top: 30px;">
+                                        <small class="text-muted d-block" style="font-size: 0.85rem; line-height: 1.4;">
+                                            <strong>Fontes consultadas:</strong> <br>
+                                            • Organização das Nações Unidas (ONU) - Campanha <i>ActNow</i> (Comece por Você) para Ação
+                                            Climática.
+                                        </small>
+                                    }
                     else
-                    {
-                        @Model.Descricao
-                    }
+                                    {
+                                        @Model.Descricao
+                                    }
 
-                </div>
+                                </div>
 
-                <div class="text-center mt-5">
-                    @* Este formulário chama o método que criamos no Controller *@
-                    <form asp-action="ConcluirEtapa" asp-controller="Trilha" method="post">
-                        <input type="hidden" name="id" value="@Model.Id" />
-                        
-                        <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm fw-bold" 
-                                style="border-radius: 15px; transition: 0.3s;">
-                            Concluir esta Lição 🍀
-                        </button>
-                    </form>
-                    
-                    <div class="mt-3">
-                        <a asp-action="Index" class="text-muted text-decoration-none small">
-                            <i class="bi bi-arrow-left"></i> Voltar para o mapa da trilha
-                        </a>
+                                <div class="text-center mt-5">
+                                    @* Este formulário chama o método que criamos no Controller *@
+                                    <form asp-action="ConcluirEtapa" asp-controller="Trilha" method="post">
+                                        <input type="hidden" name="id" value="@Model.Id" />
+
+                                        <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm fw-bold"
+                                                style="border-radius: 15px; transition: 0.3s;">
+                                            Concluir esta Lição 🍀
+                                        </button>
+                                    </form>
+
+                                    <div class="mt-3">
+                                        <a asp-action="Index" class="text-muted text-decoration-none small">
+                                            <i class="bi bi-arrow-left"></i> Voltar para o mapa da trilha
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<style>
-    /* Efeito de hover no botão para dar um feedback visual */
-    .btn-success:hover {
-        transform: scale(1.05);
-        background-color: #1e7e34;
-    }
-</style>
+                <style>
+                    /* Efeito de hover no botão para dar um feedback visual */
+                    .btn-success:hover {
+                        transform: scale(1.05);
+                        background-color: #1e7e34;
+                    }
+                </style>

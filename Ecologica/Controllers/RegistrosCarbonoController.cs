@@ -47,14 +47,12 @@ namespace Ecologica.Controllers
             // 3. Prepara os dados do Gráfico (Exemplos para teste)
             ViewBag.LabelsGrafico = new[] { "Transporte", "Energia", "Alimentação" };
             ViewBag.ValoresGrafico = new[] { 45, 25, 30 };
-            
+
             // Nome do usuário para a saudação
             ViewBag.NomeUsuario = "Yvani";
 
             // Retorna a lista de registros para a Model da View
             return View(registros);
         }
-
-        // Métodos Create, Edit, Delete viriam abaixo...
     }
 }
