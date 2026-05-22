@@ -5,11 +5,13 @@ a.navbar-brand {
   text-align: center;
   word-break: break-all;
   font-weight: bold;
-  color: #1b4d2c !important; /* Nome Ecologica sempre em verde escuro */
+  color: #1b4d2c !important;
+  /* Nome Ecologica sempre em verde escuro */
 }
 
 a {
-  color: #28a745; /* Links em verde */
+  color: #28a745;
+  /* Links em verde */
 }
 
 a:hover {
@@ -29,7 +31,8 @@ a:hover {
 }
 
 /* Menu de Navegação Ativo */
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
   color: #fff;
   background-color: #1b4d2c;
   border-color: #153a21;
@@ -38,6 +41,7 @@ a:hover {
 .border-top {
   border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
   border-bottom: 1px solid #e5e5e5;
 }
@@ -60,4 +64,10 @@ button.accept-policy {
   line-height: 60px;
   background-color: #f8f9fa;
   color: #556b5c;
+}
+
+.peao-posicao-15 {
+  left: 40%;
+  /* Ajuste esse valor até ele ficar em cima de uma pedra */
+  top: 50%;
 }

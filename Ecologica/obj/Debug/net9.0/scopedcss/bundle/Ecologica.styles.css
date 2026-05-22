@@ -6,11 +6,13 @@ a.navbar-brand[b-qf2165h2e2] {
   text-align: center;
   word-break: break-all;
   font-weight: bold;
-  color: #1b4d2c !important; /* Nome Ecologica sempre em verde escuro */
+  color: #1b4d2c !important;
+  /* Nome Ecologica sempre em verde escuro */
 }
 
 a[b-qf2165h2e2] {
-  color: #28a745; /* Links em verde */
+  color: #28a745;
+  /* Links em verde */
 }
 
 a:hover[b-qf2165h2e2] {
@@ -30,7 +32,8 @@ a:hover[b-qf2165h2e2] {
 }
 
 /* Menu de Navegação Ativo */
-.nav-pills .nav-link.active[b-qf2165h2e2], .nav-pills .show > .nav-link[b-qf2165h2e2] {
+.nav-pills .nav-link.active[b-qf2165h2e2],
+.nav-pills .show>.nav-link[b-qf2165h2e2] {
   color: #fff;
   background-color: #1b4d2c;
   border-color: #153a21;
@@ -39,6 +42,7 @@ a:hover[b-qf2165h2e2] {
 .border-top[b-qf2165h2e2] {
   border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom[b-qf2165h2e2] {
   border-bottom: 1px solid #e5e5e5;
 }
@@ -61,4 +65,10 @@ button.accept-policy[b-qf2165h2e2] {
   line-height: 60px;
   background-color: #f8f9fa;
   color: #556b5c;
+}
+
+.peao-posicao-15[b-qf2165h2e2] {
+  left: 40%;
+  /* Ajuste esse valor até ele ficar em cima de uma pedra */
+  top: 50%;
 }

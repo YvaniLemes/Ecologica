@@ -154,7 +154,6 @@ C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\rjsmcshtml.dswa
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\scopedcss\bundle\Ecologica.styles.css
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\scopedcss\projectbundle\Ecologica.bundle.scp.css
-C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\te5qiy6ou1-c6joau23eo.gz
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\vlyshval6z-61n19gt1b8.gz
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\m9ulryltkm-xtxxf3hu2r.gz
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\bn9sgb4uzq-t1cqhe9u97.gz
@@ -216,8 +215,6 @@ C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\gps0
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\m5zfdyxntp-9vr69e8ynj.gz
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\4t9jrxswvl-87fc7y1x7t.gz
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\5r5r7jvmjz-mlv21k5csn.gz
-C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\gnh0vrxkb7-k6o9edudmn.gz
-C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\krf5q22tkn-k6o9edudmn.gz
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\staticwebassets.build.json.cache
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\staticwebassets.development.json
@@ -228,3 +225,6 @@ C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\refint\Ecologic
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\Ecologica.pdb
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\Ecologica.genruntimeconfig.cache
 C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\ref\Ecologica.dll
+C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\gnh0vrxkb7-5fiozabwqp.gz
+C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\krf5q22tkn-5fiozabwqp.gz
+C:\Users\yvani\source\repos\Ecologica\Ecologica\obj\Debug\net9.0\compressed\te5qiy6ou1-x341kvqwa5.gz

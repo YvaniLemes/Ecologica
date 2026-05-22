@@ -23,13 +23,34 @@ namespace Ecologica.Data
 
             modelBuilder.Entity<TrilhaConhecimento>().HasData(
                 // 🔹 Fase 1: Começa como Broto (Progresso 0.0), livre para jogar
-                new TrilhaConhecimento { Id = 1, Titulo = "Introdução ao CO2", Descricao = "Aprenda o básico", Progresso = 0.0, EstaBloqueado = false },
+                new TrilhaConhecimento
+                {
+                    Id = 1,
+                    Titulo = "Introdução ao CO2",
+                    Descricao = "Aprenda o básico",
+                    Progresso = 0.0,
+                    EstaBloqueado = false
+                },
 
                 // 🔹 Fase 2: Começa como Semente (Progresso 0.0) e bloqueada com cadeado
-                new TrilhaConhecimento { Id = 2, Titulo = "Cálculo de Emissões", Descricao = "Hora de praticar", Progresso = 0.0, EstaBloqueado = true },
+                new TrilhaConhecimento
+                {
+                    Id = 2,
+                    Titulo = "Cálculo de Emissões",
+                    Descricao = "Hora de praticar",
+                    Progresso = 0.0,
+                    EstaBloqueado = true
+                },
 
                 // 🔹 Fase 3: Começa como Semente (Progresso 0.0) e bloqueada com cadeado
-                new TrilhaConhecimento { Id = 3, Titulo = "Desafio Final", Descricao = "Mestre da Ecologia", Progresso = 0.0, EstaBloqueado = true }
+                new TrilhaConhecimento
+                {
+                    Id = 3,
+                    Titulo = "Desafio Final",
+                    Descricao = "Mestre da Ecologia",
+                    Progresso = 0.0,
+                    EstaBloqueado = true
+                }
             );
         }
     }

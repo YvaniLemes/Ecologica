@@ -18,10 +18,10 @@ namespace Ecologica.Controllers
         public IActionResult Index()
         {
             var listaDaTrilha = _context.trilha_progresso.ToList();
-            
+
             // Busca o nosso usuário no banco para ler os dados reais dele
             var usuario = _context.Usuarios.FirstOrDefault();
-            
+
             // Se o usuário existir, mandamos os dados reais dele para a tela.
             // Se não existir, usamos valores padrão (0) para não quebrar a tela.
             ViewBag.TotalXP = usuario != null ? usuario.Pontos : 0;
@@ -93,6 +93,22 @@ namespace Ecologica.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        // METODO DO MAPA CORRIGIDO (Sem duplicidade e integrado aos pontos do Usuario)
+        public IActionResult Mapa()
+        {
+            var usuario = _context.Usuarios.FirstOrDefault();
+            int totalXP = usuario != null ? usuario.Pontos : 0;
+
+            // Calcula a posição de 0 a 48
+            int posicaoCalculada = totalXP / 100;
+            ViewBag.PosicaoNoMapa = Math.Clamp(posicaoCalculada, 0, 48);
+
+            ViewBag.TotalXP = totalXP;
+            ViewBag.ArvoresPlantadas = usuario != null ? usuario.QuantidadeArvores : 0;
+
+            return View();
         }
     }
 }

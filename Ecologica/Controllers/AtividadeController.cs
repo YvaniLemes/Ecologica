@@ -118,6 +118,14 @@ namespace Ecologica.Controllers
                         UsuarioId = usuarioId.Value,
                         DataAquisicao = DateTime.Now
                     });
+
+                    // GAMIFICAÇÃO: Acertou uma questão no quiz? Ganha +50 XP diretos no perfil!
+                    var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == usuarioId);
+                    if (usuario != null)
+                    {
+                        usuario.Pontos += 50;
+                    }
+
                     _context.SaveChanges();
                 }
 
@@ -152,7 +160,7 @@ namespace Ecologica.Controllers
                 new QuizViewModel { Id = 2, Pergunta = "Quanto tempo uma garrafa PET leva para se decompor?", Opcoes = new List<string> { "Até 100 anos", "Até 450 anos", "Cerca de 20 anos" }, RespostaCorretaIndice = 1, Explicacao = "Plásticos podem levar séculos. Reduzir o uso é fundamental! ♻️" },
                 new QuizViewModel { Id = 3, Pergunta = "Qual dessas carnes tem a maior pegada de carbono?", Opcoes = new List<string> { "Frango", "Suína", "Bovina" }, RespostaCorretaIndice = 2, Explicacao = "A produção de carne bovina exige muito mais recursos e emite mais metano." },
                 new QuizViewModel { Id = 4, Pergunta = "O que significa o termo 'Carbono Neutro'?", Opcoes = new List<string> { "Não respirar", "Equilibrar emissões com absorção", "Usar apenas pilhas" }, RespostaCorretaIndice = 1, Explicacao = "É quando compensamos o que emitimos através de ações como o plantio de árvores. 🌳" },
-                new QuizViewModel { Id = 5, Pergunta = "Qual o maior benefício da compostagem doméstica?", Opcoes = new List<string> { "Gerar adubo e reduzir lixo", "Atrair insetos", "Aumentar o consumo" }, RespostaCorretaIndice = 0, Explicacao = "A compostagem transforma lixo orgânico em nutriente para a terra! 🍀" },
+                new QuizViewModel { Id = 5, Pergunta = "Qual o maior benefício da compostagem doméstica?", Opcoes = new List<string> { "Gerar adubo e reduzir lixo", "Atrair insectos", "Aumentar o consumo" }, RespostaCorretaIndice = 0, Explicacao = "A compostagem transforma lixo orgânico em nutriente para a terra! 🍀" },
                 new QuizViewModel { Id = 6, Pergunta = "Qual dessas lâmpadas é a mais eficiente?", Opcoes = new List<string> { "Incandescente", "Fluorescente", "LED" }, RespostaCorretaIndice = 2, Explicacao = "Lâmpadas LED consomem até 80% menos energia que as comuns." },
                 new QuizViewModel { Id = 7, Pergunta = "O que é o 'Efeito Estufa'?", Opcoes = new List<string> { "Um tipo de horta", "Aquecimento global por gases", "Resfriamento da Terra" }, RespostaCorretaIndice = 1, Explicacao = "É o acúmulo de gases que retêm calor na atmosfera." },
                 new QuizViewModel { Id = 8, Pergunta = "Qual país é líder mundial em energia eólica?", Opcoes = new List<string> { "Brasil", "China", "Estados Unidos" }, RespostaCorretaIndice = 1, Explicacao = "A China investe massivamente em infraestrutura de energias renováveis." },
@@ -207,6 +215,22 @@ namespace Ecologica.Controllers
                 novoRegistro.DataRegistro = DateTime.Now;
 
                 _context.RegistrosCarbono.Add(novoRegistro);
+
+                // --- CONEXÃO COM O MAPA (GAMIFICAÇÃO) ---
+                var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == usuarioId);
+                if (usuario != null)
+                {
+                    // Regra: se a emissão for baixa (menor que 20kg de CO2), o usuário mandou muito bem!
+                    if (novoRegistro.EmissaoTotal < 20)
+                    {
+                        usuario.Pontos += 200; // Super Recompensa por hábito altamente sustentável!
+                    }
+                    else
+                    {
+                        usuario.Pontos += 100; // Pontuação padrão por registrar a atividade
+                    }
+                }
+
                 _context.SaveChanges();
 
                 var jaTemConquista = _context.Conquistas
@@ -224,7 +248,8 @@ namespace Ecologica.Controllers
                     _context.SaveChanges();
                 }
 
-                return RedirectToAction("Historico");
+                // MODIFICAÇÃO INTERESSANTE: Redireciona direto para o Mapa na Trilha para ver o Peão andar!
+                return RedirectToAction("Mapa", "Trilha");
             }
 
             ViewBag.ListaAtividades = _context.Atividades.ToList();

@@ -34,54 +34,60 @@
                                 <a class="nav-link text-dark" href="/Atividade/Create">Novo Cálculo</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Trilha/Index">Trilha Ecológica</a>
+                                <a class="nav-link text-dark" href="/Trilha/Index">Trilha Ecologica</a>
                             </li>
-                        }
-                    </ul>
-
-                    <ul class="navbar-nav">
-                        @if (!string.IsNullOrEmpty(Context.Session.GetString("UsuarioNome")))
-                        {
-                            <li class="nav-item d-flex align-items-center">
-                                <span class="nav-link text-dark fw-bold me-3">Olá, @Context.Session.GetString("UsuarioNome")!</span>
-                            </li>
-                            
-                            @* VERIFICAÇÃO DE ROTA PARA DEFINIR O COMPORTAMENTO DO BOTÃO DE NAVEGAÇÃO *@
-                            if (ViewContext.RouteData.Values["Controller"]?.ToString() == "Atividade" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index")
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-danger fw-bold" href="/Usuario/Logout">Sair</a>
+                            <li class="nav-item">
+                                <a class="nav-link text-success" asp-controller="Trilha" asp-action="Mapa">🗺️ Mapa
+                                    Ecologica</a>
                                 </li>
                             }
-                            else
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-danger fw-bold" href="/Atividade/Index">Voltar</a>
-                                </li>
-                            }
-                        }
-                    </ul>
+                        </ul>
 
-                </div>
+                        <ul class="navbar-nav">
+                            @if (!string.IsNullOrEmpty(Context.Session.GetString("UsuarioNome")))
+                            {
+                                <li class="nav-item d-flex align-items-center">
+                                    <span class="nav-link text-dark fw-bold me-3">Olá,
+                                        @Context.Session.GetString("UsuarioNome")!</span>
+                                    </li>
+
+                                    @* VERIFICAÇÃO DE ROTA PARA DEFINIR O COMPORTAMENTO DO BOTÃO DE NAVEGAÇÃO *@
+                                    if (ViewContext.RouteData.Values["Controller"]?.ToString() == "Atividade" &&
+                                ViewContext.RouteData.Values["Action"]?.ToString() == "Index")
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link text-danger fw-bold" href="/Usuario/Logout">Sair</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link text-danger fw-bold" href="/Atividade/Index">Voltar</a>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <div class="container">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
             </div>
-        </nav>
-    </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+            <footer class="border-top footer text-muted text-center">
+                <div class="container">
+                    &copy; 2026 - Ecologica - Sustentabilidade Digital
+                </div>
+            </footer>
 
-    <footer class="border-top footer text-muted text-center">
-        <div class="container">
-            &copy; 2026 - Ecologica - Sustentabilidade Digital
-        </div>
-    </footer>
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            @await RenderSectionAsync("Scripts", required: false)
+        </body>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-
-</html>
+    </html>

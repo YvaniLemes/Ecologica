@@ -5,30 +5,32 @@
     ViewData["Title"] = "Trilha do Conhecimento";
 }
 
-@* Cabeçalho de Status - Gamificação da Floresta Acumulativa *@
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #f0fdf4; border-radius: 15px; margin-bottom: 20px; border: 1px solid #dcfce7; max-width: 700px; margin-left: auto; margin-right: auto;">
-    <div style="display: flex; align-items: center;">
-        <span style="font-weight: bold; color: #166534; margin-right: 10px;">Sua Floresta:</span>
-        @if (ViewBag.ArvoresPlantadas == 0)
-        {
-            <span style="color: #166534; font-size: 0.9rem; font-style: italic;">🌱 (Comece a plantar!)</span>
-        }
-        else
-        {
-            @for (int i = 0; i < ViewBag.ArvoresPlantadas; i++)
+@* Cabeçalho de Status (Tamanho das árvores corrigido) *@
+<div class="painel-status-ludico">
+    <div class="status-item">
+        <span class="status-label">Sua Floresta:</span>
+        <div class="floresta-container">
+            @if (ViewBag.ArvoresPlantadas == 0)
             {
-                <img src="~/img/tree.png" width="22" style="margin-right: 4px;" title="Árvore Conquistada!" alt="Árvore" />
+                <span class="semente-inicial">🌱 (Comece a plantar!)</span>
             }
-        }
+            else
+            {
+                @for (int i = 0; i < ViewBag.ArvoresPlantadas; i++)
+                {
+                    <img src="~/img/tree.png" class="arvore-conquistada" title="Árvore Conquistada!" alt="Árvore" />
+                }
+            }
+        </div>
     </div>
-
-    <div style="font-weight: bold; color: #166534;">
-        Pontos: @ViewBag.TotalXP XP 🌿
+    <div class="pontuacao-xp">
+        <span>🌿 @ViewBag.TotalXP XP</span>
     </div>
 </div>
 
+@* Container da Trilha *@
 <div class="mapa-container">
-    <h2 class="text-center mb-4" style="color: #14532d; font-weight: bold;">Trilha Ecológica</h2>
+    <h2 class="text-center mb-5 titulo-trilha-principal">Trilha Ecologica</h2>
 
     @{
         var lista = Model.ToList();
@@ -36,25 +38,24 @@
     @for (int i = 0; i < lista.Count; i++)
     {
         var etapa = lista[i];
-        <div class="ponto-estrada @(i % 2 == 0 ? "esquerda" : "direita")">
-            
+        string classeTema = (i % 3 == 0) ? "tema-agua" : (i % 3 == 1) ? "tema-energia" : "tema-reciclagem";
+
+        <div class="ponto-estrada @(i % 2 == 0 ? "esquerda" : "direita") @classeTema">
             <div class="caminho-wrapper">
                 <div class="etapa-visual">
                     <div class="base-terra"></div>
-                    <img src="~/img/@etapa.ObterImagemProgresso()" 
-                         class="imagem-etapa @(etapa.EstaBloqueado ? "grayscale" : "")" />
-                    
+                    <img src="~/img/@etapa.ObterImagemProgresso()"
+                         class="imagem-etapa @(etapa.EstaBloqueado ? "grayscale" : "flutuante")" />
                     @if (etapa.EstaBloqueado)
                     {
                         <div class="cadeado-mini">🔒</div>
                     }
                 </div>
-
-                <div class="etapa-info">
+                <div class="etapa-info-card">
                     <h6 class="titulo-etapa">@etapa.Titulo</h6>
                     @if (!etapa.EstaBloqueado)
                     {
-                        <a asp-action="Detalhes" asp-route-id="@etapa.Id" class="btn-jogar">
+                        <a asp-action="Detalhes" asp-route-id="@etapa.Id" class="btn-jogar-ludico">
                             @(etapa.Progresso >= 1.0 ? "Revisar" : "Jogar")
                         </a>
                     }
@@ -65,7 +66,6 @@
                 </div>
             </div>
 
-            @* Curva da Estrada - Ajustada para ser mais compacta *@
             @if (i < lista.Count - 1)
             {
                 <div class="curva-estrada"></div>
@@ -74,130 +74,213 @@
     }
 </div>
 
-<style>
+<style type="text/css">
+    /* ==========================================================================
+       ESTILOS DA TRILHA - VERSÃO CORRIGIDA E FINAL
+       ========================================================================== */
+
+    /* CORREÇÃO DO TAMANHO DAS ÁRVORES NO TOPO */
+    .floresta-container img {
+        width: 22px !important;
+        /* Força o tamanho pequeno na barra */
+        height: auto !important;
+        margin-right: 2px;
+    }
+
+    /* Container do Mapa */
     .mapa-container {
-        position: relative;
-        max-width: 500px; /* Reduzi a largura total para aproximar as curvas */
-        margin: 0 auto;
-        padding: 20px 0;
+        position: relative !important;
+        max-width: 480px !important;
+        margin: 0 auto !important;
+        padding: 10px 0 !important;
     }
 
     .ponto-estrada {
-        position: relative;
-        width: 100%;
-        display: flex;
-        margin-bottom: 60px; /* Reduzi a distância vertical entre as lições */
+        position: relative !important;
+        width: 100% !important;
+        display: flex !important;
+        margin-bottom: 40px !important;
     }
 
-    .ponto-estrada.esquerda { justify-content: flex-start; padding-left: 20px; }
-    .ponto-estrada.direita { justify-content: flex-end; padding-right: 20px; }
+    .ponto-estrada.esquerda {
+        justify-content: flex-start !important;
+        padding-left: 15px !important;
+    }
 
-    .caminho-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 10;
-        width: 150px; /* Reduzi a largura do container do item */
+    .ponto-estrada.direita {
+        justify-content: flex-end !important;
+        padding-right: 15px !important;
+    }
+
+    /* Ícones e Nós da Trilha */
+    .imagem-etapa {
+        width: 75px !important;
+        height: auto !important;
+        z-index: 5;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .etapa-visual {
-        position: relative;
-        width: 100px;
-        height: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        position: relative !important;
+        width: 90px !important;
+        height: 90px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
     .base-terra {
-        position: absolute;
-        bottom: 5px;
-        width: 70px;
-        height: 20px;
-        background: #c3a683;
-        border-radius: 50%;
-        opacity: 0.5;
-        z-index: 1;
+        position: absolute !important;
+        bottom: 2px !important;
+        width: 70px !important;
+        height: 18px !important;
+        background: #bcaaa4 !important;
+        border-radius: 50% !important;
+        border: 2px dashed rgba(141, 110, 99, 0.6) !important;
+        z-index: 1 !important;
     }
 
-    .imagem-etapa {
-        width: 75px; /* Árvores um pouco menores para caber no espaço compacto */
-        z-index: 5;
-        transition: transform 0.2s ease;
-    }
-
-    .ponto-estrada:hover .imagem-etapa:not(.grayscale) {
-        transform: scale(1.15) translateY(-5px);
-    }
-
-    .grayscale { filter: grayscale(1) opacity(0.6); }
-
-    /* Estrada compacta e sinuosa */
+    /* Curva da Estrada (Unificada para evitar erros) */
     .curva-estrada {
-        position: absolute;
-        height: 100px; /* Ajustado para a nova distância vertical */
-        border: 15px solid #d1d5db; /* Estrada um pouco mais fina */
-        z-index: 1;
-        pointer-events: none;
+        position: absolute !important;
+        height: 85px !important;
+        border: 16px solid #ffe082 !important;
+        z-index: 0 !important;
+        pointer-events: none !important;
+        top: 60px !important;
     }
 
-    /* Curva para a direita */
     .ponto-estrada.esquerda .curva-estrada {
-        border-radius: 0 60px 60px 0;
-        border-left: 0;
-        border-bottom: 0;
-        left: 85px; /* Alinhado ao centro da árvore */
-        top: 50px;
-        width: calc(100% - 85px);
+        border-radius: 0 60px 60px 0 !important;
+        border-left: 0 !important;
+        border-bottom: 0 !important;
+        left: 80px !important;
+        width: calc(100% - 80px) !important;
     }
 
-    /* Curva para a esquerda */
     .ponto-estrada.direita .curva-estrada {
-        border-radius: 60px 0 0 60px;
-        border-right: 0;
-        border-bottom: 0;
-        right: 85px;
-        top: 50px;
-        width: calc(100% - 85px);
+        border-radius: 60px 0 0 60px !important;
+        border-right: 0 !important;
+        border-bottom: 0 !important;
+        right: 80px !important;
+        width: calc(100% - 80px) !important;
     }
 
-    .titulo-etapa { 
-        color: #14532d; 
-        font-weight: bold; 
-        font-size: 0.95rem; 
-        margin-top: 8px; 
-        text-align: center; 
-        line-height: 1.1;
-    }
-    
-    .btn-jogar {
-        background: #28a745;
-        color: white;
-        text-decoration: none;
-        padding: 5px 15px;
-        border-radius: 15px;
-        font-size: 0.85rem;
-        font-weight: bold;
-        box-shadow: 0 3px 0 #1e7e34;
-        transition: all 0.1s;
-        margin-top: 5px;
+    /* Botões e Cards */
+    .btn-jogar-ludico {
+        color: white !important;
+        text-decoration: none !important;
+        padding: 4px 14px !important;
+        border-radius: 50px !important;
+        font-size: 0.75rem !important;
+        font-weight: 800 !important;
+        box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.2) !important;
     }
 
-    .btn-jogar:active {
-        transform: translateY(2px);
-        box-shadow: 0 1px 0 #1e7e34;
+    .etapa-info-card {
+        background: #ffffff !important;
+        padding: 6px 10px !important;
+        border-radius: 15px !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+        border: 2px solid #e2e8f0 !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        margin-top: 5px !important;
     }
 
-    .badge-bloqueado {
-        color: #94a3b8;
-        font-size: 1.2rem;
+    .titulo-etapa {
+        color: #1e293b !important;
+        font-weight: 800 !important;
+        font-size: 0.85rem !important;
+        margin-bottom: 4px !important;
+        line-height: 1.1 !important;
+        text-align: center;
+    }
+
+    /* Temas Dinâmicos */
+    .tema-agua .btn-jogar-ludico {
+        background: #0284c7 !important;
+    }
+
+    .tema-agua .curva-estrada {
+        border-color: #bae6fd !important;
+        border-style: dotted !important;
+    }
+
+    .tema-energia .btn-jogar-ludico {
+        background: #f97316 !important;
+    }
+
+    .tema-energia .curva-estrada {
+        border-color: #fed7aa !important;
+        border-style: dotted !important;
+    }
+
+    .tema-reciclagem .btn-jogar-ludico {
+        background: #22c55e !important;
+    }
+
+    .tema-reciclagem .curva-estrada {
+        border-color: #bbf7d0 !important;
+        border-style: dotted !important;
+    }
+
+    /* Estilos Extras e Painel */
+    .painel-status-ludico {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 12px 20px !important;
+        background: white !important;
+        border-radius: 20px !important;
+        margin-bottom: 20px !important;
+        border: 3px solid #4ade80 !important;
+        max-width: 700px;
+        box-shadow: 0 6px 12px rgba(22, 163, 74, 0.1) !important;
+    }
+
+    .pontuacao-xp {
+        font-weight: 900 !important;
+        color: white !important;
+        background-color: #16a34a !important;
+        padding: 4px 12px !important;
+        border-radius: 50px !important;
+        font-size: 0.85rem !important;
+    }
+
+    .status-label {
+        font-weight: 800;
+        color: #166534;
+        font-size: 0.8rem;
+        margin-right: 5px;
+    }
+
+    .titulo-trilha-principal {
+        color: #14532d !important;
+        font-weight: 900 !important;
+        text-shadow: 1px 1px 0px white !important;
+        margin-bottom: 15px !important;
+    }
+
+    .grayscale {
+        filter: grayscale(1) brightness(0.7) opacity(0.4) !important;
     }
 
     .cadeado-mini {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        font-size: 1.2rem;
-        z-index: 6;
+        position: absolute !important;
+        top: 4px !important;
+        right: 4px !important;
+        font-size: 0.9rem !important;
+        z-index: 6 !important;
+        background: white !important;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 </style>

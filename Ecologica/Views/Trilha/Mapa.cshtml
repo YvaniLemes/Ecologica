@@ -1,0 +1,82 @@
+@{
+    ViewData["Title"] = "Mapa Ecológica";
+    int posicao = ViewBag.PosicaoNoMapa;
+}
+
+<style>
+    .tabuleiro-ajustado {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .imagem-mapa-cheia {
+        width: 100%;
+        display: block;
+        border-radius: 12px;
+    }
+
+    .peao {
+        position: absolute;
+        z-index: 99;
+        text-align: center;
+        transition: all 0.8s ease-in-out;
+        transform: translate(-50%, -100%);
+        width: 60px;
+    }
+
+    /* ESSA É A CHAVE: Se a classe peao-posicao-X não existir no CSS abaixo, 
+       o peão cai nesta configuração e não some do mapa */
+    .peao {
+        left: 29%;
+        top: 31%;
+    }
+
+    .peao-avatar img {
+        width: 40px;
+        height: 40px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .peao-label {
+        background: #dc3545;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-top: 4px;
+    }
+
+    /* Mapeamento das pedras principais (você pode ir adicionando outras aqui) */
+    .peao-posicao-0 {
+        left: 29%;
+        top: 31%;
+    }
+
+    .peao-posicao-24 {
+        left: 45%;
+        top: 50%;
+    }
+
+    /* Exemplo de ponto médio */
+    .peao-posicao-48 {
+        left: 58%;
+        top: 82%;
+    }
+</style>
+
+<div class="mapa-container-expandido text-center mt-3">
+    <div class="tabuleiro-ajustado">
+        <img src="~/img/mapa-tabuleiro.jpg" class="imagem-mapa-cheia" alt="Tabuleiro">
+
+        <div class="peao peao-posicao-@posicao">
+            <div class="peao-avatar">
+                <img src="https://cdn-icons-png.flaticon.com/512/188/188333.png" alt="Brotinho">
+            </div>
+            <div class="peao-label">VOCÊ</div>
+        </div>
+    </div>
+</div>
