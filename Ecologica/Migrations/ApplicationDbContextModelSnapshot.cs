@@ -127,20 +127,23 @@ namespace Ecologica.Migrations
                         new
                         {
                             Id = 1,
+                            Descricao = "Aprenda o básico",
                             EstaBloqueado = false,
-                            Progresso = 1.0,
+                            Progresso = 0.0,
                             Titulo = "Introdução ao CO2"
                         },
                         new
                         {
                             Id = 2,
-                            EstaBloqueado = false,
-                            Progresso = 0.40000000000000002,
+                            Descricao = "Hora de praticar",
+                            EstaBloqueado = true,
+                            Progresso = 0.0,
                             Titulo = "Cálculo de Emissões"
                         },
                         new
                         {
                             Id = 3,
+                            Descricao = "Mestre da Ecologia",
                             EstaBloqueado = true,
                             Progresso = 0.0,
                             Titulo = "Desafio Final"
@@ -162,6 +165,9 @@ namespace Ecologica.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Pontos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("QuantidadeArvores")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Senha")
