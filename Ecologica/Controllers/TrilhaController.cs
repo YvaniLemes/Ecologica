@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Ecologica.Data;
 using Ecologica.Models;
 using System.Linq;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Ecologica.Controllers
 {
@@ -14,16 +17,28 @@ namespace Ecologica.Controllers
             _context = context;
         }
 
-        // Exibe o mapa da trilha
+        // Método auxiliar para garantir que a trilha sempre exista
+        private void GarantirDadosIniciais()
+        {
+            if (!_context.trilha_progresso.Any())
+            {
+                var etapas = new List<TrilhaConhecimento>
+                {
+                    new TrilhaConhecimento { Id = 1, Titulo = "Introdução", EstaBloqueado = false, Progresso = 0.0 },
+                    new TrilhaConhecimento { Id = 2, Titulo = "Energia", EstaBloqueado = true, Progresso = 0.0 },
+                    new TrilhaConhecimento { Id = 3, Titulo = "Desafio Final", EstaBloqueado = true, Progresso = 0.0 }
+                };
+                _context.trilha_progresso.AddRange(etapas);
+                _context.SaveChanges();
+            }
+        }
+
         public IActionResult Index()
         {
-            var listaDaTrilha = _context.trilha_progresso.ToList();
-
-            // Busca o nosso usuário no banco para ler os dados reais dele
+            GarantirDadosIniciais(); // Isso evita o erro de "vazio"
+            var listaDaTrilha = _context.trilha_progresso.OrderBy(t => t.Id).ToList();
             var usuario = _context.Usuarios.FirstOrDefault();
 
-            // Se o usuário existir, mandamos os dados reais dele para a tela.
-            // Se não existir, usamos valores padrão (0) para não quebrar a tela.
             ViewBag.TotalXP = usuario != null ? usuario.Pontos : 0;
             ViewBag.ArvoresPlantadas = usuario != null ? usuario.QuantidadeArvores : 0;
 
@@ -32,82 +47,49 @@ namespace Ecologica.Controllers
 
         public IActionResult Detalhes(int id)
         {
-            TrilhaConhecimento? etapa = _context.trilha_progresso.FirstOrDefault(t => t.Id == id);
-
-            if (etapa == null || etapa.EstaBloqueado)
-            {
-                return RedirectToAction("Index");
-            }
-
+            var etapa = _context.trilha_progresso.FirstOrDefault(t => t.Id == id);
+            if (etapa == null || etapa.EstaBloqueado) return RedirectToAction("Index");
             return View(etapa);
         }
 
-        // AÇÃO PRINCIPAL: Avança ou Finaliza a Trilha
         [HttpPost]
         public IActionResult ConcluirEtapa(int id)
         {
-            TrilhaConhecimento? etapaAtual = _context.trilha_progresso.FirstOrDefault(t => t.Id == id);
-            var usuario = _context.Usuarios.FirstOrDefault(); // Pega o jogador atual
+            var etapaAtual = _context.trilha_progresso.FirstOrDefault(t => t.Id == id);
+            var usuario = _context.Usuarios.FirstOrDefault();
 
             if (etapaAtual != null)
             {
-                // Se a lição ainda não tinha sido concluída antes, dá os 100 pontos para o usuário
                 if (etapaAtual.Progresso < 1.0 && usuario != null)
                 {
                     usuario.Pontos += 100;
                 }
+                etapaAtual.Progresso = 1.0;
 
-                etapaAtual.Progresso = 1.0; // Conclui a lição atual
-
-                // Se for a ÚLTIMA LIÇÃO (Desafio Final - Id 3), o ciclo se completa!
                 if (id == 3)
                 {
-                    if (usuario != null)
-                    {
-                        usuario.QuantidadeArvores += 1; // 🌳 GANHOU MAIS UMA ÁRVORE PERMANENTE!
-                    }
-
-                    // RESET DO MAPA: Prepara a trilha para o "New Game Plus" (recomeçar)
-                    var todasEtapas = _context.trilha_progresso.ToList();
-                    foreach (var etapa in todasEtapas)
-                    {
-                        etapa.Progresso = 0.0;
-                        etapa.EstaBloqueado = true; // Tranca tudo
-                    }
-
-                    // Destranca apenas a primeira para reiniciar o ciclo
-                    var primeira = todasEtapas.OrderBy(t => t.Id).FirstOrDefault();
-                    if (primeira != null) primeira.EstaBloqueado = false;
+                    if (usuario != null) usuario.QuantidadeArvores += 1;
+                    foreach (var e in _context.trilha_progresso) { e.Progresso = 0.0; e.EstaBloqueado = true; }
+                    var p = _context.trilha_progresso.OrderBy(t => t.Id).FirstOrDefault();
+                    if (p != null) p.EstaBloqueado = false;
                 }
                 else
                 {
-                    // Se NÃO for a última, apenas destranca a próxima fase normalmente
-                    TrilhaConhecimento? proximaEtapa = _context.trilha_progresso.FirstOrDefault(t => t.Id == id + 1);
-                    if (proximaEtapa != null)
-                    {
-                        proximaEtapa.EstaBloqueado = false;
-                    }
+                    var proxima = _context.trilha_progresso.FirstOrDefault(t => t.Id == id + 1);
+                    if (proxima != null) proxima.EstaBloqueado = false;
                 }
-
-                _context.SaveChanges(); // Salva tudo de uma vez só no SQLite!
+                _context.SaveChanges();
             }
-
             return RedirectToAction("Index");
         }
 
-        // METODO DO MAPA CORRIGIDO (Sem duplicidade e integrado aos pontos do Usuario)
         public IActionResult Mapa()
         {
             var usuario = _context.Usuarios.FirstOrDefault();
-            int totalXP = usuario != null ? usuario.Pontos : 0;
-
-            // Calcula a posição de 0 a 48
-            int posicaoCalculada = totalXP / 100;
-            ViewBag.PosicaoNoMapa = Math.Clamp(posicaoCalculada, 0, 48);
-
-            ViewBag.TotalXP = totalXP;
+            int posicao = usuario != null ? usuario.PosicaoNoMapa : 0;
+            ViewBag.PosicaoNoMapa = Math.Clamp(posicao, 0, 48);
+            ViewBag.TotalXP = usuario != null ? usuario.Pontos : 0;
             ViewBag.ArvoresPlantadas = usuario != null ? usuario.QuantidadeArvores : 0;
-
             return View();
         }
     }

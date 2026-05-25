@@ -1,0 +1,15 @@
+# Pastas de build
+bin/
+obj/
+
+# Banco de dados (não versionar o banco local)
+*.db
+*.db-shm
+*.db-wal
+
+# Pastas do VS Code
+.vscode/
+.vs/
+
+# Outros arquivos temporários
+*.user

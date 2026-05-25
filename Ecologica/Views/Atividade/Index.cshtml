@@ -9,16 +9,17 @@
 
 <div class="container-fluid mt-4">
     <div class="row mb-4">
-        <div class="col-12 d-flex justify-content-between align-items-center bg-white p-3 shadow-sm" style="border-radius: 15px;">
+        <div class="col-12 d-flex justify-content-between align-items-center bg-white p-3 shadow-sm"
+             style="border-radius: 15px;">
             <div>
                 <h2 class="fw-bold text-success mb-1">Olá, @ViewBag.NomeUsuario! 🍀</h2>
                 <p class="text-muted mb-0">Seu progresso está crescendo como uma planta bem cuidada.</p>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <a href="javascript:location.reload()" class="text-secondary text-decoration-none small fw-semibold me-2">
+                <a href="javascript:location.reload()" class="btn btn-success fw-bold px-3 py-2 shadow-sm"
+                   style="border-radius: 25px;">
                     🔄 Atualizar Painel
                 </a>
-
                 <a asp-action="Create" class="btn btn-success fw-bold px-4 py-2 shadow-sm" style="border-radius: 25px;">
                     Nova Atividade
                 </a>
@@ -36,237 +37,213 @@
                         foreach (var conquista in conquistas)
                         {
                             <div class="text-center" style="width: 95px;" title="@conquista.Descricao">
-                                <div class="bg-light p-3 rounded-circle shadow-sm d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 60px; height: 60px; border: 2px solid #ffb300;">
+                                <div class="bg-light p-3 rounded-circle shadow-sm d-flex align-items-center justify-content-center mx-auto mb-2"
+                                     style="width: 60px; height: 60px; border: 2px solid #ffb300;">
                                     <span class="fs-3">🏅</span>
                                 </div>
-                                <span class="fw-bold text-dark d-block small lh-sm px-1" style="word-wrap: break-word; font-size: 0.8rem;">@conquista.Nome</span>
+                                <span class="fw-bold text-dark d-block small lh-sm px-1"
+                                      style="word-wrap: break-word; font-size: 0.8rem;">@conquista.Nome</span>
                             </div>
                         }
                     }
                     else
                     {
                         <div class="text-center w-100 py-3">
-                            <p class="text-muted small mb-0">Nenhuma medalha conquistada ainda. Complete desafios no Eco-Game!</p>
-                        </div>
-                    }
-                </div>
-            </div>
-
-            <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius: 20px; flex-grow: 1;">
-                <h5 class="fw-bold text-success mb-3">Impacto por Categoria</h5>
-                <div class="chart-container d-flex align-items-center justify-content-center" style="position: relative; height:260px; width:100%">
-                    <canvas id="graficoCarbono"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-7 d-flex flex-column gap-4">
-            <div class="card border-0 shadow-sm p-4" style="border-radius: 20px; background-color: #a5d6a7; min-height: 320px;">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold text-dark mb-0">Desafio do Dia 🍀</h5>
-                    <span class="badge bg-white text-success fw-bold px-3 py-2 shadow-sm" style="border-radius: 20px; font-size: 0.75rem;">ECO-GAME</span>
-                </div>
-
-                <div id="quiz-container" class="position-relative">
-                    @if (perguntas != null && perguntas.Any())
-                    {
-                        for (int i = 0; i < perguntas.Count; i++)
-                        {
-                            var p = perguntas[i];
-                            <div class="pergunta-card" id="pergunta-@i" style="display: @(i == 0 ? "block" : "none"); transition: opacity 0.4s ease;">
-                                <p class="fs-5 text-dark fw-semibold mb-4">@p.Pergunta</p>
-                                <div class="d-flex flex-column gap-3 mb-3">
-                                    @for (int j = 0; j < p.Opcoes.Count; j++)
-                                    {
-                                        <button class="btn btn-light text-start p-3 border-0 btn-opcao-@i shadow-sm w-100 position-relative fw-medium option-button" 
-                                                style="border-radius: 15px; color: #2e7d32; transition: all 0.2s;"
-                                                onclick="verificarResposta(@i, @p.Id, @j, @p.RespostaCorretaIndice, '@HttpUtility.JavaScriptStringEncode(p.Explicacao)')">
-                                            @p.Opcoes[j]
-                                        </button>
-                                    }
-                                </div>
+                            <p class="text-muted small mb-0">Nenhuma medalha conquistada ainda. Complete desafios no
+                                Eco-Game!</p>
                             </div>
                         }
-                    }
-                    else
-                    {
-                        <div class="text-center py-5 bg-white rounded shadow-sm" style="border-radius: 15px;">
-                            <h5 class="text-success fw-bold">🌱 Tudo limpo por hoje!</h5>
-                            <p class="text-muted small px-3">Você respondeu todos os desafios disponíveis. Volte amanhã para novas missões ecológicas!</p>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius: 20px; flex-grow: 1;">
+                    <h5 class="fw-bold text-success mb-3">Impacto por Categoria</h5>
+                    <div class="chart-container d-flex align-items-center justify-content-center"
+                         style="position: relative; height:260px; width:100%">
+                        <canvas id="graficoCarbono"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7 d-flex flex-column gap-4">
+                <div class="card border-0 shadow-sm p-4"
+                     style="border-radius: 20px; background-color: #a5d6a7; min-height: 320px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-dark mb-0">Desafio do Dia 🍀</h5>
+                        <span class="badge bg-white text-success fw-bold px-3 py-2 shadow-sm"
+                              style="border-radius: 20px; font-size: 0.75rem;">ECO-GAME</span>
+                    </div>
+
+                    <div id="quiz-container" class="position-relative">
+                        @if (perguntas != null && perguntas.Any())
+                        {
+                            for (int i = 0; i < perguntas.Count; i++)
+                            {
+                                var p = perguntas[i];
+                                <div class="pergunta-card" id="pergunta-@i"
+                                     style="display: @(i == 0 ? "block" : "none"); transition: opacity 0.4s ease;">
+                                    <p class="fs-5 text-dark fw-semibold mb-4">@p.Pergunta</p>
+                                    <div class="d-flex flex-column gap-3 mb-3">
+                                        @for (int j = 0; j < p.Opcoes.Count; j++)
+                                        {
+                                            <button
+                                                class="btn btn-light text-start p-3 border-0 btn-opcao-@i shadow-sm w-100 position-relative fw-medium option-button"
+                                                style="border-radius: 15px; color: #2e7d32; transition: all 0.2s;"
+                                                onclick="verificarResposta(@i, @p.Id, @j, @p.RespostaCorretaIndice, '@HttpUtility.JavaScriptStringEncode(p.Explicacao)')">
+                                                @p.Opcoes[j]
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center py-5 bg-white rounded shadow-sm" style="border-radius: 15px;">
+                                <h5 class="text-success fw-bold">🌱 Tudo limpo por hoje!</h5>
+                                <p class="text-muted small px-3">Você respondeu todos os desafios disponíveis. Volte amanhã para
+                                    novas missões ecológicas!</p>
+                                </div>
+                            }
+
+                            <div id="resultado-quiz" class="p-3 mt-3 shadow-sm font-medium small"
+                                 style="display: none; border-radius: 15px; min-height: 60px;"></div>
                         </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius: 20px;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold text-success mb-0">Histórico de Atividades</h5>
+                            <a asp-action="Historico"
+                               class="btn btn-link text-success fw-semibold p-0 text-decoration-none small">Ver Completo →</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light text-secondary">
+                                    <tr>
+                                        <th class="border-0">Atividade</th>
+                                        <th class="border-0 text-center">Total (kgCO₂)</th>
+                                        <th class="border-0 text-end">Data</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        foreach (var item in Model.Take(5))
+                                        {
+                                            <tr>
+                                                <td class="fw-semibold text-dark">@(item.AtividadeRelacionada != null ?
+                                                                                        item.AtividadeRelacionada.Nome : "Outros")</td>
+                                                    <td class="text-center fw-bold text-danger">@item.EmissaoTotal.ToString("F2")</td>
+                                                    <td class="text-end text-muted small">@item.DataRegistro.ToString("dd/MM/yyyy")</td>
+                                                </tr>
+                                            }
+                                        }
+                            else
+                                        {
+                                            <tr>
+                                                <td colspan="3" class="text-center text-muted py-3 small">Nenhuma atividade registrada
+                                                    ainda.</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    .option-button:hover:not(:disabled) {
+                        background-color: #e8f5e9 !important;
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
                     }
 
-                    <div id="resultado-quiz" class="p-3 mt-3 shadow-sm font-medium small" style="display: none; border-radius: 15px; min-height: 60px;"></div>
-                </div>
-            </div>
+                    .option-button:disabled {
+                        opacity: 0.8;
+                        cursor: not-allowed;
+                    }
+                </style>
 
-            <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius: 20px;">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold text-success mb-0">Histórico de Atividades</h5>
-                    <a asp-action="Historico" class="btn btn-link text-success fw-semibold p-0 text-decoration-none small">Ver Completo →</a>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light text-secondary">
-                            <tr>
-                                <th class="border-0">Atividade</th>
-                                <th class="border-0 text-center">Total (kgCO₂)</th>
-                                <th class="border-0 text-end">Data</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model != null && Model.Any())
-                            {
-                                foreach (var item in Model.Take(5))
-                                {
-                                    <tr>
-                                        <td class="fw-semibold text-dark">@(item.AtividadeRelacionada != null ? item.AtividadeRelacionada.Nome : "Outros")</td>
-                                        <td class="text-center fw-bold text-danger">@item.EmissaoTotal.ToString("F2")</td>
-                                        <td class="text-end text-muted small">@item.DataRegistro.ToString("dd/MM/yyyy")</td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="3" class="text-center text-muted py-3 small">Nenhuma atividade registrada ainda.</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                @section Scripts {
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script>
+                        const ctx = document.getElementById('graficoCarbono');
 
-<style>
-    .option-button:hover:not(:disabled) {
-        background-color: #e8f5e9 !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
-    }
-    .option-button:disabled {
-        opacity: 0.8;
-        cursor: not-allowed;
-    }
-</style>
+                        function inicializarGrafico() {
+                        if (!ctx) return;
+                        const labelsGrafico = @Html.Raw(Json.Serialize(ViewBag.LabelsGrafico));
+                        const valoresGrafico = @Html.Raw(Json.Serialize(ViewBag.ValoresGrafico));
 
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        const ctx = document.getElementById('graficoCarbono');
-        if (ctx) {
-            const labelsGrafico = @Html.Raw(Json.Serialize(ViewBag.LabelsGrafico));
-            const valoresGrafico = @Html.Raw(Json.Serialize(ViewBag.ValoresGrafico));
-
-            if (labelsGrafico && labelsGrafico.length > 0) {
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
+                        if (labelsGrafico && labelsGrafico.length > 0) {
+                        new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
                         labels: labelsGrafico,
                         datasets: [{
-                            data: valoresGrafico,
-                            backgroundColor: [
-                                '#e65100', '#ffb300', '#8e24aa', '#1e88e5', '#43a047', '#fb8c00'
-                            ],
-                            borderWidth: 2,
-                            borderColor: '#ffffff'
+                        data: valoresGrafico,
+                        backgroundColor: ['#e65100', '#ffb300', '#8e24aa', '#1e88e5', '#43a047', '#fb8c00'],
+                        borderWidth: 2, borderColor: '#ffffff'
                         }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { 
-                                position: 'bottom', 
-                                labels: { 
-                                    boxWidth: 12, 
-                                    font: { size: 11, weight: 'bold' },
-                                    padding: 15
-                                } 
-                            }
                         },
-                        cutout: '72%', 
-                        radius: '90%'
-                    }
-                });
-            } else {
-                ctx.parentNode.innerHTML = `<p class="text-muted small">Insira sua primeira atividade para gerar o gráfico de impacto.</p>`;
-            }
-        }
+                        options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                        legend: {
+                        position: 'bottom',
+                        labels: {
+                        boxWidth: 12, font: { size: 12, weight: 'bold' }, padding: 20,
+                        generateLabels: function (chart) {
+                        const data = chart.data;
+                        const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        return data.labels.map((label, i) => {
+                        const value = data.datasets[0].data[i];
+                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                        return { text: `${label}: ${percentage}`, fillStyle: data.datasets[0].backgroundColor[i], index: i };
+                        });
+                        }
+                        }
+                        }
+                        },
+                        cutout: '72%', radius: '90%'
+                        }
+                        });
+                        }
+                        }
 
-        let processando = false;
+                        inicializarGrafico();
 
-        function verificarResposta(cardIdx, questaoRealId, escolhida, correta, explicacao) {
-            if (processando) return;
-            processando = true;
+                        let processando = false;
+                        function verificarResposta(cardIdx, questaoRealId, escolhida, correta, explicacao) {
+                        if (processando) return;
+                        processando = true;
+                        const resDiv = document.getElementById("resultado-quiz");
+                        document.querySelectorAll(`.btn-opcao-${cardIdx}`).forEach(btn => btn.disabled = true);
 
-            const resDiv = document.getElementById("resultado-quiz");
-            const botoesOpcao = document.querySelectorAll(`.btn-opcao-${cardIdx}`);
-            botoesOpcao.forEach(btn => btn.disabled = true);
+                        resDiv.style.backgroundColor = (escolhida === correta) ? "#c8e6c9" : "#ffecb3";
+                        resDiv.style.color = (escolhida === correta) ? "#1b5e20" : "#5d4037";
+                        resDiv.innerHTML = `<div><span>${escolhida === correta ? '🍀 <strong>Perfeito!</strong>' : '🌿 <strong>Quase lá!</strong>'} ${explicacao}</span><div class="text-end mt-2"><button class="btn btn-${escolhida === correta ? 'success' : 'warning'} btn-sm px-4 shadow-sm" style="border-radius: 20px;" onclick="proximaPergunta(${cardIdx})">Continuar ➡️</button></div></div>`;
+                        resDiv.style.display = "block";
 
-            if (escolhida === correta) {
-                resDiv.style.backgroundColor = "#c8e6c9";
-                resDiv.style.color = "#1b5e20";
-                resDiv.innerHTML = `
-                    <div class="d-flex flex-column gap-2">
-                        <span>🍀 <strong>Perfeito!</strong> ${explicacao}</span>
-                        <div class="text-end mt-2">
-                            <button class="btn btn-success btn-sm px-4 shadow-sm" style="border-radius: 20px;" onclick="proximaPergunta(${cardIdx})">Avançar ➡️</button>
-                        </div>
-                    </div>`;
-            } else {
-                resDiv.style.backgroundColor = "#ffecb3";
-                resDiv.style.color = "#5d4037";
-                resDiv.innerHTML = `
-                    <div class="d-flex flex-column gap-2">
-                        <span>🌿 <strong>Quase lá!</strong> ${explicacao}</span>
-                        <div class="text-end mt-2">
-                            <button class="btn btn-warning btn-sm px-4 shadow-sm text-dark" style="border-radius: 20px;" onclick="proximaPergunta(${cardIdx})">Continuar ➡️</button>
-                        </div>
-                    </div>`;
-            }
-            resDiv.style.display = "block";
+                        fetch('/Atividade/ValidarRespostaQuiz', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `questaoIndice=${questaoRealId}&alternativaEscolhida=${escolhida}`
+                        }).catch(console.error);
+                        }
 
-            fetch('/Atividade/ValidarRespostaQuiz', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `questaoIndice=${questaoRealId}&alternativaEscolhida=${escolhida}`
-            })
-            .catch(error => {
-                console.error('Erro ao salvar progresso do ecogame:', error);
-            });
-        }
-
-        function proximaPergunta(cardIdx) {
-            const resDiv = document.getElementById("resultado-quiz");
-            const cardAtual = document.getElementById(`pergunta-${cardIdx}`);
-
-            if (cardAtual) {
-                cardAtual.style.display = "none";
-            }
-
-            let proxima = document.getElementById(`pergunta-${cardIdx + 1}`);
-
-            if (proxima) {
-                resDiv.style.display = "none";
-                proxima.style.display = "block";
-                proxima.style.opacity = "1";
-                processando = false;
-            } else {
-                resDiv.style.backgroundColor = "#ffffff";
-                resDiv.style.color = "#2e7d32";
-                resDiv.innerHTML = `
-                    <div class="text-center p-2">
-                        <h5 class="fw-bold text-success">🏁 Bloco Concluído!</h5>
-                        <p class="text-muted small mb-3">Você fechou todas as perguntas selecionadas para hoje.</p>
-                        <button class="btn btn-outline-success btn-sm px-3" style="border-radius: 20px;" onclick="location.reload()">
-                            Atualizar Painel 🔄
-                        </button>
-                    </div>`;
-            }
-        }
-    </script>
-}
+                        function proximaPergunta(cardIdx) {
+                        document.getElementById(`pergunta-${cardIdx}`).style.display = "none";
+                        let proxima = document.getElementById(`pergunta-${cardIdx + 1}`);
+                        if (proxima) {
+                        document.getElementById("resultado-quiz").style.display = "none";
+                        proxima.style.display = "block";
+                        processando = false;
+                        } else {
+                        document.getElementById("resultado-quiz").innerHTML = `<div class="text-center p-2"><h5 class="fw-bold text-success">🏁 Bloco Concluído!</h5><button class="btn btn-outline-success btn-sm px-3" style="border-radius: 20px;" onclick="location.reload()">Atualizar Painel 🔄</button></div>`;
+                        }
+                        }
+                    </script>
+                }

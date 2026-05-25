@@ -167,6 +167,9 @@ namespace Ecologica.Migrations
                     b.Property<int>("Pontos")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("PosicaoNoMapa")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("QuantidadeArvores")
                         .HasColumnType("INTEGER");
 

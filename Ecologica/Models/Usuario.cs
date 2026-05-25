@@ -20,5 +20,8 @@ namespace Ecologica.Models
 
         // 🌳 NOVA PROPRIEDADE: Guarda a quantidade de árvores vitalícias plantadas!
         public int QuantidadeArvores { get; set; } = 0;
+
+        // 🏁 NOVA PROPRIEDADE: Controla a casa atual do peão no mapa  
+        public int PosicaoNoMapa { get; set; } = 0;
     }
 }

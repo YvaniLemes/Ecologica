@@ -4,18 +4,31 @@
 }
 
 <style>
-    .tabuleiro-ajustado {
+    .mapa-container-total {
+        width: 100vw;
+        height: calc(100vh - 120px);
+        margin: 0;
+        padding: 0;
         position: relative;
-        display: inline-block;
-        width: 100%;
-        max-width: 1000px;
-        margin: 0 auto;
+        background-color: #d0f2d3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
     }
 
     .imagem-mapa-cheia {
-        width: 100%;
-        display: block;
-        border-radius: 12px;
+        width: 95vw;
+        height: auto;
+        max-height: 85vh;
+        object-fit: contain;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .mapa-wrapper {
+        position: relative;
+        display: inline-block;
     }
 
     .peao {
@@ -23,21 +36,15 @@
         z-index: 99;
         text-align: center;
         transition: all 0.8s ease-in-out;
-        transform: translate(-50%, -100%);
         width: 60px;
-    }
-
-    /* ESSA É A CHAVE: Se a classe peao-posicao-X não existir no CSS abaixo, 
-       o peão cai nesta configuração e não some do mapa */
-    .peao {
-        left: 29%;
-        top: 31%;
+        margin-left: -30px;
+        margin-top: -50px;
     }
 
     .peao-avatar img {
-        width: 40px;
-        height: 40px;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        width: 45px;
+        height: 45px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
     }
 
     .peao-label {
@@ -48,31 +55,15 @@
         padding: 2px 8px;
         border-radius: 4px;
         margin-top: 4px;
-    }
-
-    /* Mapeamento das pedras principais (você pode ir adicionando outras aqui) */
-    .peao-posicao-0 {
-        left: 29%;
-        top: 31%;
-    }
-
-    .peao-posicao-24 {
-        left: 45%;
-        top: 50%;
-    }
-
-    /* Exemplo de ponto médio */
-    .peao-posicao-48 {
-        left: 58%;
-        top: 82%;
+        text-transform: uppercase;
     }
 </style>
 
-<div class="mapa-container-expandido text-center mt-3">
-    <div class="tabuleiro-ajustado">
+<div class="mapa-container-total">
+    <div class="mapa-wrapper">
         <img src="~/img/mapa-tabuleiro.jpg" class="imagem-mapa-cheia" alt="Tabuleiro">
 
-        <div class="peao peao-posicao-@posicao">
+        <div class="peao" style="left: @(29 + (posicao * 0.6))%; top: @(31 + (posicao * 1.0))%;">
             <div class="peao-avatar">
                 <img src="https://cdn-icons-png.flaticon.com/512/188/188333.png" alt="Brotinho">
             </div>
