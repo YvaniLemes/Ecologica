@@ -17,7 +17,9 @@ namespace Ecologica.Controllers
             _context = context;
         }
 
-        // Método auxiliar para garantir que a trilha sempre exista
+        // =================================================================
+        // LÓGICA DA TRILHA ECOLÓGICA (Etapas, Bloqueios, XP)
+        // =================================================================
         private void GarantirDadosIniciais()
         {
             if (!_context.trilha_progresso.Any())
@@ -35,7 +37,7 @@ namespace Ecologica.Controllers
 
         public IActionResult Index()
         {
-            GarantirDadosIniciais(); // Isso evita o erro de "vazio"
+            GarantirDadosIniciais();
             var listaDaTrilha = _context.trilha_progresso.OrderBy(t => t.Id).ToList();
             var usuario = _context.Usuarios.FirstOrDefault();
 
@@ -58,17 +60,19 @@ namespace Ecologica.Controllers
             var etapaAtual = _context.trilha_progresso.FirstOrDefault(t => t.Id == id);
             var usuario = _context.Usuarios.FirstOrDefault();
 
-            if (etapaAtual != null)
+            if (etapaAtual != null && usuario != null)
             {
-                if (etapaAtual.Progresso < 1.0 && usuario != null)
+                // Lógica de XP
+                if (etapaAtual.Progresso < 1.0)
                 {
                     usuario.Pontos += 100;
                 }
                 etapaAtual.Progresso = 1.0;
 
+                // Lógica de Avanço da Trilha
                 if (id == 3)
                 {
-                    if (usuario != null) usuario.QuantidadeArvores += 1;
+                    usuario.QuantidadeArvores += 1;
                     foreach (var e in _context.trilha_progresso) { e.Progresso = 0.0; e.EstaBloqueado = true; }
                     var p = _context.trilha_progresso.OrderBy(t => t.Id).FirstOrDefault();
                     if (p != null) p.EstaBloqueado = false;
@@ -78,18 +82,31 @@ namespace Ecologica.Controllers
                     var proxima = _context.trilha_progresso.FirstOrDefault(t => t.Id == id + 1);
                     if (proxima != null) proxima.EstaBloqueado = false;
                 }
+
+                // =================================================================
+                // LÓGICA DO MAPA ECOLÓGICO (Independente)
+                // Caso queira que o peão ande uma casa a cada etapa concluída:
+                // =================================================================
+                usuario.PosicaoNoMapa += 1;
+                if (usuario.PosicaoNoMapa > 47) usuario.PosicaoNoMapa = 47;
+
                 _context.SaveChanges();
             }
             return RedirectToAction("Index");
         }
 
+        // =================================================================
+        // LÓGICA DO MAPA ECOLÓGICO (Visualização)
+        // =================================================================
         public IActionResult Mapa()
         {
             var usuario = _context.Usuarios.FirstOrDefault();
             int posicao = usuario != null ? usuario.PosicaoNoMapa : 0;
+
             ViewBag.PosicaoNoMapa = Math.Clamp(posicao, 0, 48);
             ViewBag.TotalXP = usuario != null ? usuario.Pontos : 0;
             ViewBag.ArvoresPlantadas = usuario != null ? usuario.QuantidadeArvores : 0;
+
             return View();
         }
     }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ecologica.Models
 {
-    [Table("registros_carbono")] // Nome exato da tabela no seu SQL
+    [Table("registros_carbono")]
     public class RegistroCarbonoModel
     {
         [Key]
@@ -26,10 +26,10 @@ namespace Ecologica.Models
         [Column("data_registro")]
         public DateTime DataRegistro { get; set; } = DateTime.Now;
 
-        // Propriedades de navegação (para facilitar consultas)
+        // ADICIONE ESTA PARTE QUE ESTÁ FALTANDO:
         [ForeignKey("IdAtividade")]
         public virtual Atividade? AtividadeRelacionada { get; set; }
-        
+
         [ForeignKey("IdUsuario")]
         public virtual Usuario? Usuario { get; set; }
     }

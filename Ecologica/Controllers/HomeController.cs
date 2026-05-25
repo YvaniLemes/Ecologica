@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Ecologica.Data;
-using Ecologica.Models;      
+using Ecologica.Models;
 using System.Collections.Generic;
 
 namespace Ecologica.Controllers;

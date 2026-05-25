@@ -16,10 +16,11 @@
                 <p class="text-muted mb-0">Seu progresso está crescendo como uma planta bem cuidada.</p>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <a href="javascript:location.reload()" class="btn btn-success fw-bold px-3 py-2 shadow-sm"
-                   style="border-radius: 25px;">
+                <button onclick="location.reload()" class="btn btn-success fw-bold px-4 py-2 shadow-sm"
+                        style="border-radius: 25px;">
                     🔄 Atualizar Painel
-                </a>
+                </button>
+
                 <a asp-action="Create" class="btn btn-success fw-bold px-4 py-2 shadow-sm" style="border-radius: 25px;">
                     Nova Atividade
                 </a>
@@ -133,7 +134,7 @@
                                         {
                                             <tr>
                                                 <td class="fw-semibold text-dark">@(item.AtividadeRelacionada != null ?
-                                                                                        item.AtividadeRelacionada.Nome : "Outros")</td>
+                                                                                                                                            item.AtividadeRelacionada.Nome : "Outros")</td>
                                                     <td class="text-center fw-bold text-danger">@item.EmissaoTotal.ToString("F2")</td>
                                                     <td class="text-end text-muted small">@item.DataRegistro.ToString("dd/MM/yyyy")</td>
                                                 </tr>
@@ -169,11 +170,10 @@
 
                 @section Scripts {
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
                     <script>
                         const ctx = document.getElementById('graficoCarbono');
-
-                        function inicializarGrafico() {
-                        if (!ctx) return;
+                        if (ctx) {
                         const labelsGrafico = @Html.Raw(Json.Serialize(ViewBag.LabelsGrafico));
                         const valoresGrafico = @Html.Raw(Json.Serialize(ViewBag.ValoresGrafico));
 
@@ -184,65 +184,104 @@
                         labels: labelsGrafico,
                         datasets: [{
                         data: valoresGrafico,
-                        backgroundColor: ['#e65100', '#ffb300', '#8e24aa', '#1e88e5', '#43a047', '#fb8c00'],
-                        borderWidth: 2, borderColor: '#ffffff'
+                        backgroundColor: [
+                        '#e65100', '#ffb300', '#8e24aa', '#1e88e5', '#43a047', '#fb8c00'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
                         }]
                         },
                         options: {
-                        responsive: true, maintainAspectRatio: false,
+                        responsive: true,
+                        maintainAspectRatio: false,
                         plugins: {
                         legend: {
                         position: 'bottom',
                         labels: {
-                        boxWidth: 12, font: { size: 12, weight: 'bold' }, padding: 20,
-                        generateLabels: function (chart) {
-                        const data = chart.data;
-                        const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
-                        return data.labels.map((label, i) => {
-                        const value = data.datasets[0].data[i];
-                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
-                        return { text: `${label}: ${percentage}`, fillStyle: data.datasets[0].backgroundColor[i], index: i };
-                        });
-                        }
+                        boxWidth: 12,
+                        font: { size: 11, weight: 'bold' },
+                        padding: 15
                         }
                         }
                         },
-                        cutout: '72%', radius: '90%'
+                        cutout: '72%',
+                        radius: '90%'
                         }
                         });
+                        } else {
+                        ctx.parentNode.innerHTML = `<p class="text-muted small">Insira sua primeira atividade para gerar o gráfico de impacto.</p>`;
                         }
                         }
-
-                        inicializarGrafico();
 
                         let processando = false;
+
                         function verificarResposta(cardIdx, questaoRealId, escolhida, correta, explicacao) {
                         if (processando) return;
                         processando = true;
-                        const resDiv = document.getElementById("resultado-quiz");
-                        document.querySelectorAll(`.btn-opcao-${cardIdx}`).forEach(btn => btn.disabled = true);
 
-                        resDiv.style.backgroundColor = (escolhida === correta) ? "#c8e6c9" : "#ffecb3";
-                        resDiv.style.color = (escolhida === correta) ? "#1b5e20" : "#5d4037";
-                        resDiv.innerHTML = `<div><span>${escolhida === correta ? '🍀 <strong>Perfeito!</strong>' : '🌿 <strong>Quase lá!</strong>'} ${explicacao}</span><div class="text-end mt-2"><button class="btn btn-${escolhida === correta ? 'success' : 'warning'} btn-sm px-4 shadow-sm" style="border-radius: 20px;" onclick="proximaPergunta(${cardIdx})">Continuar ➡️</button></div></div>`;
+                        const resDiv = document.getElementById("resultado-quiz");
+                        const botoesOpcao = document.querySelectorAll(`.btn-opcao-${cardIdx}`);
+                        botoesOpcao.forEach(btn => btn.disabled = true);
+
+                        if (escolhida === correta) {
+                        resDiv.style.backgroundColor = "#c8e6c9";
+                        resDiv.style.color = "#1b5e20";
+                        resDiv.innerHTML = `
+                        <div class="d-flex flex-column gap-2">
+                        <span>🍀 <strong>Perfeito!</strong> ${explicacao}</span>
+                        <div class="text-end mt-2">
+                        <button class="btn btn-success btn-sm px-4 shadow-sm" style="border-radius: 20px;" onclick="proximaPergunta(${cardIdx})">Avançar ➡️</button>
+                        </div>
+                        </div>`;
+                        } else {
+                        resDiv.style.backgroundColor = "#ffecb3";
+                        resDiv.style.color = "#5d4037";
+                        resDiv.innerHTML = `
+                        <div class="d-flex flex-column gap-2">
+                        <span>🌿 <strong>Quase lá!</strong> ${explicacao}</span>
+                        <div class="text-end mt-2">
+                        <button class="btn btn-success fw-bold px-4 py-2 shadow-sm" style="border-radius: 25px;" onclick="proximaPergunta(${cardIdx})">Avançar ➡️</button>
+                        </div>
+                        </div>`;
+                        }
                         resDiv.style.display = "block";
 
                         fetch('/Atividade/ValidarRespostaQuiz', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: `questaoIndice=${questaoRealId}&alternativaEscolhida=${escolhida}`
-                        }).catch(console.error);
+                        })
+                        .catch(error => {
+                        console.error('Erro ao salvar progresso do ecogame:', error);
+                        });
                         }
 
                         function proximaPergunta(cardIdx) {
-                        document.getElementById(`pergunta-${cardIdx}`).style.display = "none";
+                        const resDiv = document.getElementById("resultado-quiz");
+                        const cardAtual = document.getElementById(`pergunta-${cardIdx}`);
+
+                        if (cardAtual) {
+                        cardAtual.style.display = "none";
+                        }
+
                         let proxima = document.getElementById(`pergunta-${cardIdx + 1}`);
+
                         if (proxima) {
-                        document.getElementById("resultado-quiz").style.display = "none";
+                        resDiv.style.display = "none";
                         proxima.style.display = "block";
+                        proxima.style.opacity = "1";
                         processando = false;
                         } else {
-                        document.getElementById("resultado-quiz").innerHTML = `<div class="text-center p-2"><h5 class="fw-bold text-success">🏁 Bloco Concluído!</h5><button class="btn btn-outline-success btn-sm px-3" style="border-radius: 20px;" onclick="location.reload()">Atualizar Painel 🔄</button></div>`;
+                        resDiv.style.backgroundColor = "#ffffff";
+                        resDiv.style.color = "#2e7d32";
+                        resDiv.innerHTML = `
+                        <div class="text-center p-2">
+                        <h5 class="fw-bold text-success">🏁 Bloco Concluído!</h5>
+                        <p class="text-muted small mb-3">Você fechou todas as perguntas selecionadas para hoje.</p>
+                        <button class="btn btn-outline-success btn-sm px-3" style="border-radius: 20px;" onclick="location.reload()">
+                        Atualizar Painel 🔄
+                        </button>
+                        </div>`;
                         }
                         }
                     </script>

@@ -4,47 +4,53 @@
 }
 
 <style>
-    .mapa-container-total {
-        width: 100vw;
-        height: calc(100vh - 120px);
-        margin: 0;
-        padding: 0;
+    .tabuleiro-ajustado {
         position: relative;
-        background-color: #d0f2d3;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+        max-width: 1000px;
     }
 
     .imagem-mapa-cheia {
-        width: 95vw;
-        height: auto;
-        max-height: 85vh;
-        object-fit: contain;
-        border-radius: 20px;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-    }
-
-    .mapa-wrapper {
-        position: relative;
-        display: inline-block;
+        width: 100%;
+        display: block;
+        border-radius: 12px;
     }
 
     .peao {
         position: absolute;
         z-index: 99;
-        text-align: center;
         transition: all 0.8s ease-in-out;
+        transform: translate(-50%, -100%);
         width: 60px;
-        margin-left: -30px;
-        margin-top: -50px;
+        text-align: center;
+    }
+
+    /* Esta linha garante que, se ele não souber para onde ir, ele fica no início */
+    .peao {
+        left: 29%;
+        top: 31%;
+    }
+
+    /* POSIÇÕES CHAVE - O avatar vai pular para estas coordenadas */
+    .peao-posicao-15 {
+        left: 40%;
+        top: 50%;
+    }
+
+    .peao-posicao-30 {
+        left: 50%;
+        top: 70%;
+    }
+
+    .peao-posicao-48 {
+        left: 58%;
+        top: 82%;
     }
 
     .peao-avatar img {
-        width: 45px;
-        height: 45px;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+        width: 40px;
+        height: 40px;
     }
 
     .peao-label {
@@ -54,16 +60,14 @@
         font-weight: bold;
         padding: 2px 8px;
         border-radius: 4px;
-        margin-top: 4px;
-        text-transform: uppercase;
     }
 </style>
 
-<div class="mapa-container-total">
-    <div class="mapa-wrapper">
-        <img src="~/img/mapa-tabuleiro.jpg" class="imagem-mapa-cheia" alt="Tabuleiro">
+<div class="mapa-container-expandido text-center mt-3">
+    <div class="tabuleiro-ajustado">
+        <img src="~/img/mapa-tabuleiro2.jpg" class="imagem-mapa-cheia" alt="Tabuleiro">
 
-        <div class="peao" style="left: @(29 + (posicao * 0.6))%; top: @(31 + (posicao * 1.0))%;">
+        <div class="peao peao-posicao-@posicao">
             <div class="peao-avatar">
                 <img src="https://cdn-icons-png.flaticon.com/512/188/188333.png" alt="Brotinho">
             </div>
