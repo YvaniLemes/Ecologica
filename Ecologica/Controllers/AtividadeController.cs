@@ -41,19 +41,53 @@ namespace Ecologica.Controllers
                 .Select(c => c.Nome)
                 .ToList();
 
+            // Quantidade de medalhas reais
+            ViewBag.TotalMedalhas = _context.Conquistas
+                .Count(c => c.UsuarioId == usuarioId.Value &&
+                            !c.Nome.StartsWith("Quiz-Ok-"));
+
+
+            // --- ADICIONE ESTA PARTE ABAIXO ---
+            int totalMedalhas = ViewBag.TotalMedalhas;
+            int metaFinal = 12;
+            int progresso = (int)((Math.Min(totalMedalhas, metaFinal) / (double)metaFinal) * 100);
+            ViewBag.ProgressoBarra = progresso;
+            // ----------------------------------
+
+            // --- Ranking ecológico visual ---
+            bool temEcoIniciante = _context.Conquistas.Any(c => c.UsuarioId == usuarioId.Value && c.Nome == "Eco-Iniciante 🎯");
+            bool temGuardiao = _context.Conquistas.Any(c => c.UsuarioId == usuarioId.Value && c.Nome == "Guardião Verde 🍀");
+            bool temMestre = _context.Conquistas.Any(c => c.UsuarioId == usuarioId.Value && c.Nome == "Mestre Sustentável 🌎");
+
+            string ranking = "Iniciante 🌱";
+            if (temMestre) ranking = "Mestre Sustentável 🌎";
+            else if (temGuardiao) ranking = "Guardião Verde 🍀";
+            else if (temEcoIniciante) ranking = "Eco Aprendiz 🌱";
+
+            ViewBag.RankingUsuario = ranking;
+
             // Filtramos a lista usando a nova propriedade .Id do QuizViewModel
             var perguntasDisponiveis = todasPerguntas
                 .Where(p => !questoesFeitasTags.Contains($"Quiz-Ok-{p.Id}"))
                 .ToList();
 
-            // Se ele já respondeu todas com sucesso, reiniciamos o ciclo para ele poder jogar de novo!
-            if (!perguntasDisponiveis.Any())
-            {
-                perguntasDisponiveis = todasPerguntas;
-            }
+            // Se ele já respondeu todas com sucesso, reiniciamos o ciclo
+            if (!perguntasDisponiveis.Any()) perguntasDisponiveis = todasPerguntas;
 
-            // Enviamos para a View apenas as perguntas que restam (limitado a 3 por dia para não cansar)
-            ViewBag.PerguntasQuiz = perguntasDisponiveis.Take(3).ToList();
+            int quantidadePerguntas = 3;
+
+            // Usamos as variáveis definidas no topo (sem repetir o "bool")
+            if (temEcoIniciante) quantidadePerguntas = 5;
+            if (temGuardiao) quantidadePerguntas = 7;
+            if (temMestre) quantidadePerguntas = 10;
+
+            // Embaralha perguntas
+            ViewBag.PerguntasQuiz = perguntasDisponiveis
+                .OrderBy(p => Guid.NewGuid())
+                .Take(quantidadePerguntas)
+                .ToList();
+
+
             // --- FIM DA LÓGICA DO QUIZ ---
 
             // DADOS PARA O GRÁFICO
@@ -89,26 +123,44 @@ namespace Ecologica.Controllers
         }
 
         // ACTION AJAX: Chamada quando o usuário clica em uma alternativa do Quiz
+
         [HttpPost]
         public IActionResult ValidarRespostaQuiz(int questaoIndice, int alternativaEscolhida)
         {
             var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
-            if (usuarioId == null) return Json(new { success = false, message = "Usuário não logado." });
+
+            if (usuarioId == null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Usuário não logado."
+                });
+            }
 
             var listaPerguntas = ObterListaPerguntasCompleta();
 
-            // Agora validamos buscando diretamente pelo ID fixo da questão
-            var questao = listaPerguntas.FirstOrDefault(p => p.Id == questaoIndice);
-            if (questao == null) return BadRequest();
+            var questao = listaPerguntas
+                .FirstOrDefault(p => p.Id == questaoIndice);
 
-            bool acertou = (alternativaEscolhida == questao.RespostaCorretaIndice);
+            if (questao == null)
+            {
+                return BadRequest();
+            }
+
+            bool acertou =
+                (alternativaEscolhida == questao.RespostaCorretaIndice);
 
             if (acertou)
             {
-                string tagConquistaQuiz = $"Quiz-Ok-{questao.Id}";
+                string tagConquistaQuiz =
+                    $"Quiz-Ok-{questao.Id}";
 
-                // Registra que esta questão específica foi respondida com sucesso por esse usuário
-                var jaMarcou = _context.Conquistas.Any(c => c.UsuarioId == usuarioId && c.Nome == tagConquistaQuiz);
+                bool jaMarcou = _context.Conquistas
+                    .Any(c =>
+                        c.UsuarioId == usuarioId.Value &&
+                        c.Nome == tagConquistaQuiz);
+
                 if (!jaMarcou)
                 {
                     _context.Conquistas.Add(new Conquista
@@ -118,29 +170,70 @@ namespace Ecologica.Controllers
                         UsuarioId = usuarioId.Value,
                         DataAquisicao = DateTime.Now
                     });
+
                     _context.SaveChanges();
                 }
 
-                // REGRA DE GAMIFICAÇÃO: Se ele completou 3 acertos no total, ganha a medalha "Mestre do Quiz"
-                int totalAcertos = _context.Conquistas.Count(c => c.UsuarioId == usuarioId && c.Nome.StartsWith("Quiz-Ok-"));
-                var jaTemMedalhaQuiz = _context.Conquistas.Any(c => c.UsuarioId == usuarioId && c.Nome == "Mestre do Quiz 🧠");
+                int totalAcertos = _context.Conquistas
+                    .Count(c =>
+                        c.UsuarioId == usuarioId.Value &&
+                        c.Nome.StartsWith("Quiz-Ok-"));
 
-                if (totalAcertos >= 3 && !jaTemMedalhaQuiz)
+                // Medalha 1
+                if (totalAcertos >= 3 &&
+                    !_context.Conquistas.Any(c =>
+                        c.UsuarioId == usuarioId.Value &&
+                        c.Nome == "Eco Aprendiz 🌱"))
                 {
                     _context.Conquistas.Add(new Conquista
                     {
-                        Nome = "Mestre do Quiz 🧠",
-                        Descricao = "Acertou 3 ou mais desafios do Ecogame!",
+                        Nome = "Eco Aprendiz 🌱",
+                        Descricao = "Acertou 3 desafios ecológicos!",
                         UsuarioId = usuarioId.Value,
                         DataAquisicao = DateTime.Now
                     });
-                    _context.SaveChanges();
                 }
+
+                // Medalha 2
+                if (totalAcertos >= 7 &&
+                    !_context.Conquistas.Any(c =>
+                        c.UsuarioId == usuarioId.Value &&
+                        c.Nome == "Guardião Verde 🍀"))
+                {
+                    _context.Conquistas.Add(new Conquista
+                    {
+                        Nome = "Guardião Verde 🍀",
+                        Descricao = "Acertou 7 desafios ecológicos!",
+                        UsuarioId = usuarioId.Value,
+                        DataAquisicao = DateTime.Now
+                    });
+                }
+
+                // Medalha 3
+                if (totalAcertos >= 12 &&
+                    !_context.Conquistas.Any(c =>
+                        c.UsuarioId == usuarioId.Value &&
+                        c.Nome == "Mestre Sustentável 🌎"))
+                {
+                    _context.Conquistas.Add(new Conquista
+                    {
+                        Nome = "Mestre Sustentável 🌎",
+                        Descricao = "Dominou o Eco-Game!",
+                        UsuarioId = usuarioId.Value,
+                        DataAquisicao = DateTime.Now
+                    });
+                }
+
+                _context.SaveChanges();
             }
 
-            // CORREÇÃO: Informamos com o operador (!) que Explicacao não será nula para o Json
-            return Json(new { correto = acertou, explicacao = questao.Explicacao! });
+            return Json(new
+            {
+                correto = acertou,
+                explicacao = questao.Explicacao
+            });
         }
+
 
         // Método auxiliar para centralizar as perguntas do seu Eco-Game (Expandido para 15 perguntas)
         private List<QuizViewModel> ObterListaPerguntasCompleta()
@@ -165,6 +258,27 @@ namespace Ecologica.Controllers
             };
         }
 
+        [HttpPost]
+        public IActionResult ReiniciarConquistas()
+        {
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+
+            if (usuarioId == null)
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
+            // Remove todas as conquistas do usuário
+            var conquistasUsuario = _context.Conquistas
+                .Where(c => c.UsuarioId == usuarioId.Value)
+                .ToList();
+
+            _context.Conquistas.RemoveRange(conquistasUsuario);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
         // 2. PÁGINA DO HISTÓRICO GERENCIAL (CRUD)
         public IActionResult Historico()
         {
@@ -263,6 +377,27 @@ namespace Ecologica.Controllers
 
             ViewBag.ListaAtividades = _context.Atividades.ToList();
             return View(registroEditado);
+        }
+
+        [HttpPost]
+        public IActionResult ResetarConquistas()
+        {
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+
+            if (usuarioId == null)
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
+            var conquistas = _context.Conquistas
+                .Where(c => c.UsuarioId == usuarioId.Value)
+                .ToList();
+
+            _context.Conquistas.RemoveRange(conquistas);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         // 7. APAGAR
