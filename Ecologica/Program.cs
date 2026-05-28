@@ -29,8 +29,9 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
 
-    // Garante a criação do banco
-    context.Database.EnsureCreated();
+    // context.Database.Migrate();
+
+    // context.Database.EnsureCreated();
 
     // Popula as atividades principais se estiver vazio
     if (!context.Atividades.Any())
@@ -50,11 +51,11 @@ using (var scope = app.Services.CreateScope())
     // Verifica especificamente a atividade de lixo para não duplicar
     if (!context.Atividades.Any(a => a.Nome.Contains("Lixo")))
     {
-        context.Atividades.Add(new Atividade 
-        { 
-            Nome = "Lixo Doméstico (Orgânico)", 
-            FatorEmissao = 0.5, 
-            UnidadeMedida = "kg" 
+        context.Atividades.Add(new Atividade
+        {
+            Nome = "Lixo Doméstico (Orgânico)",
+            FatorEmissao = 0.5,
+            UnidadeMedida = "kg"
         });
         context.SaveChanges();
     }
@@ -72,11 +73,19 @@ app.UseStaticFiles();
 app.UseRouting();
 
 // O UseSession DEVE vir depois do UseRouting e antes do UseAuthorization
-app.UseSession(); 
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=database.db";
+Console.WriteLine("--------------------------------------------------");
+Console.WriteLine("O CAMINHO DO BANCO QUE O SISTEMA ESTÁ USANDO É: " + Path.GetFullPath("database.db"));
+Console.WriteLine("--------------------------------------------------");
+
+
+
 
 app.Run();

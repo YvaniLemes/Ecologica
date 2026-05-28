@@ -1,21 +1,29 @@
 using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ecologica.Models
 {
+    [Table("conquistas")]
     public class Conquista
     {
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public string? Nome { get; set; } // Ex: "Eco Iniciante", "Mestre da Reciclagem"
+        [Column("nome")]
+        public string? Nome { get; set; }
 
+        [Column("descricao")]
         public string? Descricao { get; set; }
 
-        public DateTime DataAquisicao { get; set; } = DateTime.Now;
+        [Column("data_aquisicao")]
+        public DateTime? DataAquisicao { get; set; }
 
-        // Relacionamento com o usuário
-        public int UsuarioId { get; set; }
+        // --- É AQUI QUE VOCÊ COLOCA ---
+        [Column("usuario_id")]
+        public int? UsuarioId { get; set; }
+        // ------------------------------
+
+        [ForeignKey("UsuarioId")]
+        public virtual Usuario? Usuario { get; set; }
     }
 }

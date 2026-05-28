@@ -11,11 +11,13 @@ namespace Ecologica.Models
         public int Id { get; set; }
 
         [Column("nome")]
-        public string Nome { get; set; } = string.Empty;
+        public string? Nome { get; set; }   // aceita NULL
 
         [Column("fator_emissao")]
-        public double FatorEmissao { get; set; }
+        public double? FatorEmissao { get; set; }   // aceita NULL
 
-        public string? UnidadeMedida { get; set; }
+        [Column("unidade_medida")]
+        public string? UnidadeMedida { get; set; }   // aceita NULL
     }
 }
+

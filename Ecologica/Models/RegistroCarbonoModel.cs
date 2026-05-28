@@ -12,21 +12,20 @@ namespace Ecologica.Models
         public int Id { get; set; }
 
         [Column("id_usuario")]
-        public int IdUsuario { get; set; }
+        public int? IdUsuario { get; set; }   // aceita NULL
 
         [Column("id_atividade")]
-        public int IdAtividade { get; set; }
+        public int? IdAtividade { get; set; }   // aceita NULL
 
         [Column("quantidade")]
-        public double Quantidade { get; set; }
+        public double? Quantidade { get; set; }   // aceita NULL
 
         [Column("emissao_total")]
-        public double EmissaoTotal { get; set; }
+        public double? EmissaoTotal { get; set; }   // aceita NULL
 
         [Column("data_registro")]
-        public DateTime DataRegistro { get; set; } = DateTime.Now;
+        public DateTime? DataRegistro { get; set; }   // aceita NULL
 
-        // ADICIONE ESTA PARTE QUE ESTÁ FALTANDO:
         [ForeignKey("IdAtividade")]
         public virtual Atividade? AtividadeRelacionada { get; set; }
 

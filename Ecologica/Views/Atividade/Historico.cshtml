@@ -38,8 +38,8 @@
                                     @(item.AtividadeRelacionada != null ? item.AtividadeRelacionada.Nome : "Sem Atividade")
                                 </td>
                                 <td>@item.Quantidade</td>
-                                <td class="fw-bold text-dark">@item.EmissaoTotal.ToString("F2")</td>
-                                <td class="text-muted">@item.DataRegistro.ToString("dd/MM/yyyy")</td>
+                                <td class="fw-bold text-dark">@((item.EmissaoTotal ?? 0).ToString("F2"))</td>
+                                <td class="text-muted">@item.DataRegistro?.ToString("dd/MM/yyyy")</td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">
                                         <a asp-action="Edit" asp-route-id="@item.Id"

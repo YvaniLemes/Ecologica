@@ -18,6 +18,10 @@ namespace Ecologica.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Usuario>().ToTable("usuarios");
+
+            base.OnModelCreating(modelBuilder);
+
             // Garante que o EF procure a tabela com este nome no SQLite
             modelBuilder.Entity<TrilhaConhecimento>().ToTable("trilha_progresso");
 

@@ -11,7 +11,6 @@ namespace Ecologica.Controllers
 {
     public class RegistrosCarbonoController : Controller
     {
-        // Substitua 'SeuDbContext' pelo nome real do seu arquivo de contexto do banco de dados
         private readonly ApplicationDbContext _context;
 
         public RegistrosCarbonoController(ApplicationDbContext context)

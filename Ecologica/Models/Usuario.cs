@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ecologica.Models
 {
@@ -6,22 +7,11 @@ namespace Ecologica.Models
     {
         [Key]
         public int Id { get; set; }
-
-        [Required(ErrorMessage = "O nome é obrigatório")]
         public string? Nome { get; set; }
-
-        [Required(ErrorMessage = "O e-mail é obrigatório")]
         public string? Email { get; set; }
-
-        [Required(ErrorMessage = "A senha é obrigatória")]
         public string? Senha { get; set; }
-
-        public int Pontos { get; set; } = 0;
-
-        // 🌳 NOVA PROPRIEDADE: Guarda a quantidade de árvores vitalícias plantadas!
-        public int QuantidadeArvores { get; set; } = 0;
-
-        // 🏁 NOVA PROPRIEDADE: Controla a casa atual do peão no mapa  
-        public int PosicaoNoMapa { get; set; } = 0;
+        public int? Pontos { get; set; }
+        public int? QuantidadeArvores { get; set; }
+        public int? PosicaoNoMapa { get; set; } // O banco diz "PosicaoNoMapa"
     }
 }

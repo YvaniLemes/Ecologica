@@ -45,15 +45,16 @@
                 <div class="etapa-visual">
                     <div class="base-terra"></div>
                     <img src="~/img/@etapa.ObterImagemProgresso()"
-                         class="imagem-etapa @(etapa.EstaBloqueado ? "grayscale" : "flutuante")" />
-                    @if (etapa.EstaBloqueado)
+                         class="imagem-etapa @((etapa.EstaBloqueado ?? true) ? "grayscale" : "flutuante")" />
+
+                    @if (etapa.EstaBloqueado ?? true)
                     {
                         <div class="cadeado-mini">🔒</div>
                     }
                 </div>
                 <div class="etapa-info-card">
                     <h6 class="titulo-etapa">@etapa.Titulo</h6>
-                    @if (!etapa.EstaBloqueado)
+                    @if (!(etapa.EstaBloqueado ?? true))
                     {
                         <a asp-action="Detalhes" asp-route-id="@etapa.Id" class="btn-jogar-ludico">
                             @(etapa.Progresso >= 1.0 ? "Revisar" : "Jogar")

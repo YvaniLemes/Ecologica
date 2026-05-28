@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Ecologica.Migrations
 {
     /// <inheritdoc />
-    public partial class CriacaoInicial : Migration
+    public partial class InicialLimpo : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,29 +19,13 @@ namespace Ecologica.Migrations
                 {
                     id_atividade = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    nome = table.Column<string>(type: "TEXT", nullable: false),
-                    fator_emissao = table.Column<double>(type: "REAL", nullable: false),
-                    UnidadeMedida = table.Column<string>(type: "TEXT", nullable: true)
+                    nome = table.Column<string>(type: "TEXT", nullable: true),
+                    fator_emissao = table.Column<double>(type: "REAL", nullable: true),
+                    unidade_medida = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_atividades", x => x.id_atividade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Conquistas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nome = table.Column<string>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", nullable: true),
-                    DataAquisicao = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UsuarioId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Conquistas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,8 +36,8 @@ namespace Ecologica.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Titulo = table.Column<string>(type: "TEXT", nullable: true),
                     Descricao = table.Column<string>(type: "TEXT", nullable: true),
-                    Progresso = table.Column<double>(type: "REAL", nullable: false),
-                    EstaBloqueado = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Progresso = table.Column<double>(type: "REAL", nullable: true),
+                    EstaBloqueado = table.Column<bool>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -61,21 +45,42 @@ namespace Ecologica.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Usuarios",
+                name: "usuarios",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Nome = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false),
-                    Senha = table.Column<string>(type: "TEXT", nullable: false),
-                    Pontos = table.Column<int>(type: "INTEGER", nullable: false),
-                    QuantidadeArvores = table.Column<int>(type: "INTEGER", nullable: false),
-                    PosicaoNoMapa = table.Column<int>(type: "INTEGER", nullable: false)
+                    Nome = table.Column<string>(type: "TEXT", nullable: true),
+                    Email = table.Column<string>(type: "TEXT", nullable: true),
+                    Senha = table.Column<string>(type: "TEXT", nullable: true),
+                    Pontos = table.Column<int>(type: "INTEGER", nullable: true),
+                    QuantidadeArvores = table.Column<int>(type: "INTEGER", nullable: true),
+                    PosicaoNoMapa = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Usuarios", x => x.Id);
+                    table.PrimaryKey("PK_usuarios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "conquistas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    nome = table.Column<string>(type: "TEXT", nullable: true),
+                    descricao = table.Column<string>(type: "TEXT", nullable: true),
+                    data_aquisicao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    usuario_id = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_conquistas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_conquistas_usuarios_usuario_id",
+                        column: x => x.usuario_id,
+                        principalTable: "usuarios",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -84,27 +89,25 @@ namespace Ecologica.Migrations
                 {
                     id_registro = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    id_usuario = table.Column<int>(type: "INTEGER", nullable: false),
-                    id_atividade = table.Column<int>(type: "INTEGER", nullable: false),
-                    quantidade = table.Column<double>(type: "REAL", nullable: false),
-                    emissao_total = table.Column<double>(type: "REAL", nullable: false),
-                    data_registro = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    id_usuario = table.Column<int>(type: "INTEGER", nullable: true),
+                    id_atividade = table.Column<int>(type: "INTEGER", nullable: true),
+                    quantidade = table.Column<double>(type: "REAL", nullable: true),
+                    emissao_total = table.Column<double>(type: "REAL", nullable: true),
+                    data_registro = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_registros_carbono", x => x.id_registro);
                     table.ForeignKey(
-                        name: "FK_registros_carbono_Usuarios_id_usuario",
-                        column: x => x.id_usuario,
-                        principalTable: "Usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_registros_carbono_atividades_id_atividade",
                         column: x => x.id_atividade,
                         principalTable: "atividades",
-                        principalColumn: "id_atividade",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id_atividade");
+                    table.ForeignKey(
+                        name: "FK_registros_carbono_usuarios_id_usuario",
+                        column: x => x.id_usuario,
+                        principalTable: "usuarios",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -116,6 +119,11 @@ namespace Ecologica.Migrations
                     { 2, "Hora de praticar", true, 0.0, "Cálculo de Emissões" },
                     { 3, "Mestre da Ecologia", true, 0.0, "Desafio Final" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_conquistas_usuario_id",
+                table: "conquistas",
+                column: "usuario_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_registros_carbono_id_atividade",
@@ -132,7 +140,7 @@ namespace Ecologica.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Conquistas");
+                name: "conquistas");
 
             migrationBuilder.DropTable(
                 name: "registros_carbono");
@@ -141,10 +149,10 @@ namespace Ecologica.Migrations
                 name: "trilha_progresso");
 
             migrationBuilder.DropTable(
-                name: "Usuarios");
+                name: "atividades");
 
             migrationBuilder.DropTable(
-                name: "atividades");
+                name: "usuarios");
         }
     }
 }

@@ -50,7 +50,8 @@ namespace Ecologica.Controllers
         public IActionResult Detalhes(int id)
         {
             var etapa = _context.trilha_progresso.FirstOrDefault(t => t.Id == id);
-            if (etapa == null || etapa.EstaBloqueado) return RedirectToAction("Index");
+            if (etapa == null || (etapa.EstaBloqueado ?? false))
+                return RedirectToAction("Index");
             return View(etapa);
         }
 
@@ -101,11 +102,14 @@ namespace Ecologica.Controllers
         public IActionResult Mapa()
         {
             var usuario = _context.Usuarios.FirstOrDefault();
-            int posicao = usuario != null ? usuario.PosicaoNoMapa : 0;
+
+            // Se usuario for null, posicao será 0. 
+            // Se usuario.PosicaoNoMapa for null, o ?? 0 resolve.
+            int posicao = usuario?.PosicaoNoMapa ?? 0;
 
             ViewBag.PosicaoNoMapa = Math.Clamp(posicao, 0, 48);
-            ViewBag.TotalXP = usuario != null ? usuario.Pontos : 0;
-            ViewBag.ArvoresPlantadas = usuario != null ? usuario.QuantidadeArvores : 0;
+            ViewBag.TotalXP = usuario?.Pontos ?? 0;
+            ViewBag.ArvoresPlantadas = usuario?.QuantidadeArvores ?? 0;
 
             return View();
         }

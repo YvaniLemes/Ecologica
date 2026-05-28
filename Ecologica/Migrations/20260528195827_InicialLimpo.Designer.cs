@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecologica.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260525000449_CriacaoInicial")]
-    partial class CriacaoInicial
+    [Migration("20260528195827_InicialLimpo")]
+    partial class InicialLimpo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,17 +27,17 @@ namespace Ecologica.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("id_atividade");
 
-                    b.Property<double>("FatorEmissao")
+                    b.Property<double?>("FatorEmissao")
                         .HasColumnType("REAL")
                         .HasColumnName("fator_emissao");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("nome");
 
                     b.Property<string>("UnidadeMedida")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("unidade_medida");
 
                     b.HasKey("Id");
 
@@ -50,22 +50,27 @@ namespace Ecologica.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DataAquisicao")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("DataAquisicao")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("data_aquisicao");
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("descricao");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("nome");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("INTEGER");
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("usuario_id");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Conquistas");
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("conquistas");
                 });
 
             modelBuilder.Entity("Ecologica.Models.RegistroCarbonoModel", b =>
@@ -75,23 +80,23 @@ namespace Ecologica.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("id_registro");
 
-                    b.Property<DateTime>("DataRegistro")
+                    b.Property<DateTime?>("DataRegistro")
                         .HasColumnType("TEXT")
                         .HasColumnName("data_registro");
 
-                    b.Property<double>("EmissaoTotal")
+                    b.Property<double?>("EmissaoTotal")
                         .HasColumnType("REAL")
                         .HasColumnName("emissao_total");
 
-                    b.Property<int>("IdAtividade")
+                    b.Property<int?>("IdAtividade")
                         .HasColumnType("INTEGER")
                         .HasColumnName("id_atividade");
 
-                    b.Property<int>("IdUsuario")
+                    b.Property<int?>("IdUsuario")
                         .HasColumnType("INTEGER")
                         .HasColumnName("id_usuario");
 
-                    b.Property<double>("Quantidade")
+                    b.Property<double?>("Quantidade")
                         .HasColumnType("REAL")
                         .HasColumnName("quantidade");
 
@@ -113,10 +118,10 @@ namespace Ecologica.Migrations
                     b.Property<string>("Descricao")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("EstaBloqueado")
+                    b.Property<bool?>("EstaBloqueado")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Progresso")
+                    b.Property<double?>("Progresso")
                         .HasColumnType("REAL");
 
                     b.Property<string>("Titulo")
@@ -160,44 +165,46 @@ namespace Ecologica.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Pontos")
+                    b.Property<int?>("Pontos")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PosicaoNoMapa")
+                    b.Property<int?>("PosicaoNoMapa")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("QuantidadeArvores")
+                    b.Property<int?>("QuantidadeArvores")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Senha")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("usuarios", (string)null);
+                });
+
+            modelBuilder.Entity("Ecologica.Models.Conquista", b =>
+                {
+                    b.HasOne("Ecologica.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Ecologica.Models.RegistroCarbonoModel", b =>
                 {
                     b.HasOne("Ecologica.Models.Atividade", "AtividadeRelacionada")
                         .WithMany()
-                        .HasForeignKey("IdAtividade")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdAtividade");
 
                     b.HasOne("Ecologica.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdUsuario");
 
                     b.Navigation("AtividadeRelacionada");
 
