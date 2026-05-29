@@ -167,60 +167,73 @@
                     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
                 }
             </style>
-
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                const ctx = document.getElementById('graficoCarbono').getContext('2d');
-                const labels = @Html.Raw(Json.Serialize(ViewBag.DadosGrafico.labels));
-                const valores = @Html.Raw(Json.Serialize(ViewBag.DadosGrafico.valores));
-
-                new Chart(ctx, {
-                type: 'doughnut',
-                data: {
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx = document.getElementById('graficoCarbono').getContext('2d');
+        const labels = @Html.Raw(Json.Serialize(ViewBag.DadosGrafico.labels));
+const valores = @Html.Raw(Json.Serialize(ViewBag.DadosGrafico.valores));
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
                 labels: labels,
                 datasets: [{
-                data: valores,
-                backgroundColor: ['#FF5722', '#FFC107', '#9C27B0', '#00BCD4', '#4CAF50', '#BF360C']
+                    data: valores,
+                    backgroundColor: ['#FF5722', '#FFC107', '#9C27B0', '#00BCD4', '#4CAF50', '#BF360C']
                 }]
-                },
-                options: {
+            },
+            options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                legend: { position: 'bottom' },
-                tooltip: {
-                callbacks: {
-                label: function (context) {
-                let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                let value = context.parsed;
-                let percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                return context.label + ': ' + value + ' (' + percentage + '%)';
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+    label: function (context) {
+    let label = context.label || '';
+    // Corrigindo a forma de pegar o valor
+    let value = context.parsed !== null ? context.parsed : 0; 
+    
+    // Calcula o total somando todos os valores do dataset
+    let total = context.dataset.data.reduce((a, b) => a + b, 0);
+    
+    // Calcula a porcentagem
+    let percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+    
+    return `${label}: ${value.toFixed(2)} kgCO₂ (${percentage}%)`;
+}
+                        }
+                    }
                 }
-                }
-                }
-                }
-                }
-                });
-                });
+            }
+        });
+    });
 
-                window.processarResposta = function (cardIdx, questaoRealId, escolhida, correta, explicacao) {
-                const acertou = (escolhida === correta);
-                const resDiv = document.getElementById("resultado-quiz");
-                resDiv.style.backgroundColor = acertou ? "#c8e6c9" : "#ffecb3";
-                resDiv.innerHTML = `<div style="padding: 15px;">${acertou ? "🍀 <strong>Perfeito!</strong>" : "🌿 <strong>Quase lá!</strong>"} ${explicacao}<br><br><button type="button" class="btn btn-success w-100" onclick="proximaPergunta(${cardIdx})">Avançar ➡️</button></div>`;
-                resDiv.style.display = "block";
-                fetch('/Atividade/ValidarRespostaQuiz', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: `questaoIndice=${questaoRealId}&alternativaEscolhida=${escolhida}` });
-                };
+    window.processarResposta = function (cardIdx, questaoRealId, escolhida, correta, explicacao) {
+        const acertou = (escolhida === correta);
+        const resDiv = document.getElementById("resultado-quiz");
+        resDiv.style.backgroundColor = acertou ? "#c8e6c9" : "#ffecb3";
+        resDiv.innerHTML = `<div style="padding: 15px;">${acertou ? "🍀 <strong>Perfeito!</strong>" : "🌿 <strong>Quase lá!</strong>"} ${explicacao}<br><br><button type="button" class="btn btn-success w-100" onclick="proximaPergunta(${cardIdx})">Avançar ➡️</button></div>`;
+        resDiv.style.display = "block";
 
-                window.proximaPergunta = function (cardIdx) {
-                document.getElementById("pergunta-" + cardIdx).style.display = "none";
-                document.getElementById("resultado-quiz").style.display = "none";
-                const proxima = document.getElementById("pergunta-" + (cardIdx + 1));
-                if (proxima) {
-                proxima.style.display = "block";
-                } else {
-                location.reload();
-                }
-                };
-            </script>
+        fetch('/Atividade/ValidarRespostaQuiz', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+            body: `questaoIndice=${questaoRealId}&alternativaEscolhida=${escolhida}` 
+        }).then(() => {
+            console.log("Resposta registrada no banco com sucesso!");
+        });
+    };
+
+    window.proximaPergunta = function (cardIdx) {
+        document.getElementById("pergunta-" + cardIdx).style.display = "none";
+        document.getElementById("resultado-quiz").style.display = "none";
+        const proxima = document.getElementById("pergunta-" + (cardIdx + 1));
+        if (proxima) {
+            proxima.style.display = "block";
+        } else {
+            document.getElementById("quiz-container").innerHTML = 
+                "<div class='alert alert-success'>Parabéns! Você completou o desafio do dia. 🎉</div>";
+        }
+    };
+</script>
